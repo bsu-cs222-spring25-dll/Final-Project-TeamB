@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.util.List;
 
@@ -41,17 +42,52 @@ public class VehicleSelectionPanel extends VBox {
         vehicleComboBox = new ComboBox<>();
         vehicleComboBox.setPromptText("Select a Vehicle");
         vehicleComboBox.setMaxWidth(Double.MAX_VALUE);
-        vehicleComboBox.setOnAction(e-> updateSelectedVehicle());
+
+        vehicleComboBox.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        selectedVehicle = newValue;
+                        updateMpgLabel();
+                    }
+                }
+        );
+
+        vehicleComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Vehicle vehicle) {
+                if (vehicle == null) {
+                    return null;
+                }
+                return vehicle.year + " " + vehicle.make + " " + vehicle.model;
+            }
+            @Override
+            public Vehicle fromString(String string) {
+                // Not needed for this use case
+                return null;
+            }
+        });
 
         mpgLabel = new Label("MPG: N/A");
 
         loadDefaultVehicles();
 
+        this.getChildren().addAll(
+                titleLabel,
+                searchField,
+                searchButton,
+                vehicleComboBox,
+                mpgLabel
+        );
+
     }
 
     private void loadDefaultVehicles() {
         List<Vehicle> vehicles = database.getDefaultVehicles();
-        vehicleComboBox.setItems(FXCollections.observableArrayList(vehicles));
+        if (vehicles != null && !vehicles.isEmpty()) {
+            vehicleComboBox.setItems(FXCollections.observableArrayList(vehicles));
+        } else{
+            System.out.println("Warning: No vehicles loaded from database");
+        }
     }
 
     private void searchVehicles() {
@@ -59,16 +95,18 @@ public class VehicleSelectionPanel extends VBox {
         if (!query.isEmpty()) {
             List<Vehicle> results = database.searchVehicles(query);
             vehicleComboBox.setItems(FXCollections.observableArrayList(results));
-            if (!results.isEmpty()){
-                vehicleComboBox.getSelectionModel().selectFirst();
-                updateSelectedVehicle();
+            if (!results.isEmpty()) {
+                vehicleComboBox.getSelectionModel().select(0); // Select first result
+                selectedVehicle = vehicleComboBox.getSelectionModel().getSelectedItem();
+                updateMpgLabel();
+            } else {
+                mpgLabel.setText("No matching vehicles found");
             }
-        } else{
+        } else {
             loadDefaultVehicles();
         }
     }
-    private void updateSelectedVehicle(){
-        selectedVehicle = vehicleComboBox.getSelectionModel().getSelectedItem();
+    private void updateMpgLabel(){
         if (selectedVehicle != null){
             mpgLabel.setText(String.format("City: %.1f MPG, Highway %.1f MPG, Combined %.1f MPG",
                     selectedVehicle.cityMpg,
@@ -80,5 +118,12 @@ public class VehicleSelectionPanel extends VBox {
     }
     public Vehicle getSelectedVehicle(){
         return selectedVehicle;
+    }
+    public void printSelectionStatus() {
+        System.out.println("Current selection: " +
+                (selectedVehicle != null ? selectedVehicle.toString() : "No vehicle selected"));
+        System.out.println("ComboBox selection: " +
+                (vehicleComboBox.getSelectionModel().getSelectedItem() != null ?
+                        vehicleComboBox.getSelectionModel().getSelectedItem().toString() : "No selection in ComboBox"));
     }
 }
