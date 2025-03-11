@@ -16,13 +16,11 @@ import java.util.List;
 
 
 public class VehicleSelectionPanel extends VBox {
-    private Label titleLabel;
-    private TextField searchField;
-    private Button searchButton;
-    private ComboBox<Vehicle> vehicleComboBox;
-    private Label mpgLabel;
+    private final TextField searchField;
+    private final ComboBox<Vehicle> vehicleComboBox;
+    private final Label mpgLabel;
 
-    private VehicleDatabase database;
+    private final VehicleDatabase database;
     private Vehicle selectedVehicle;
 
     public VehicleSelectionPanel(String title){
@@ -31,12 +29,12 @@ public class VehicleSelectionPanel extends VBox {
 
         database = new VehicleDatabase();
 
-        titleLabel = new Label(title);
+        Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
         searchField = new TextField();
         searchField.setPromptText("Search Make or Model");
-        searchButton = new Button("Search");
+        Button searchButton = new Button("Search");
         searchButton.setOnAction(e-> searchVehicles());
 
         vehicleComboBox = new ComboBox<>();
@@ -96,7 +94,7 @@ public class VehicleSelectionPanel extends VBox {
             List<Vehicle> results = database.searchVehicles(query);
             vehicleComboBox.setItems(FXCollections.observableArrayList(results));
             if (!results.isEmpty()) {
-                vehicleComboBox.getSelectionModel().select(0); // Select first result
+                vehicleComboBox.getSelectionModel().select(0);
                 selectedVehicle = vehicleComboBox.getSelectionModel().getSelectedItem();
                 updateMpgLabel();
             } else {
@@ -119,11 +117,5 @@ public class VehicleSelectionPanel extends VBox {
     public Vehicle getSelectedVehicle(){
         return selectedVehicle;
     }
-    public void printSelectionStatus() {
-        System.out.println("Current selection: " +
-                (selectedVehicle != null ? selectedVehicle.toString() : "No vehicle selected"));
-        System.out.println("ComboBox selection: " +
-                (vehicleComboBox.getSelectionModel().getSelectedItem() != null ?
-                        vehicleComboBox.getSelectionModel().getSelectedItem().toString() : "No selection in ComboBox"));
-    }
+
 }
