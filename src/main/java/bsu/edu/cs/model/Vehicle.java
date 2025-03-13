@@ -8,12 +8,13 @@ public class Vehicle {
     public double highwayMpg;
     public double combinedMpg;
 
-    public Vehicle(String make, String model, double combinedMpg) {
+    public Vehicle(String make, String model, double combinedMpg, int year) {
         this.make = make;
         this.model = model;
         this.year = 2023;
         this.cityMpg = combinedMpg;
         this.highwayMpg = combinedMpg;
         this.combinedMpg = combinedMpg;
+        this.year = year;
     }
 }

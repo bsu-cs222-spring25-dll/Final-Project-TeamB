@@ -15,11 +15,10 @@ import java.util.List;
 
 
 public class VehicleSelectionPanel extends VBox {
-    private Label titleLabel;
-    private TextField searchField;
-    private Button searchButton;
-    private ComboBox<Vehicle> vehicleComboBox;
-    private Label mpgLabel;
+    private final TextField searchField;
+    private final ComboBox<Vehicle> vehicleComboBox;
+    private final Label mpgLabel;
+
 
     private ToggleGroup inputToggle;
     private RadioButton databaseRadio;
@@ -34,6 +33,7 @@ public class VehicleSelectionPanel extends VBox {
     private Button applyManualButton;
 
     private VehicleDatabase database;
+
     private Vehicle selectedVehicle;
 
     public VehicleSelectionPanel(String title){
@@ -42,7 +42,7 @@ public class VehicleSelectionPanel extends VBox {
 
         database = new VehicleDatabase();
 
-        titleLabel = new Label(title);
+        Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
         inputToggle = new ToggleGroup();
@@ -59,7 +59,7 @@ public class VehicleSelectionPanel extends VBox {
 
         searchField = new TextField();
         searchField.setPromptText("Search Make or Model");
-        searchButton = new Button("Search");
+        Button searchButton = new Button("Search");
         searchButton.setOnAction(e-> searchVehicles());
 
         vehicleComboBox = new ComboBox<>();

@@ -11,7 +11,7 @@ public class FuelComparisonApp extends Application {
     public void start(Stage primaryStage){
         MainView mainView = new MainView();
 
-        Scene scene = new Scene(mainView,800, 800);
+        Scene scene = new Scene(mainView);
 
         //scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm());
 
