@@ -11,6 +11,9 @@ public class Vehicle {
     public Vehicle(String make, String model, double combinedMpg) {
         this.make = make;
         this.model = model;
+        this.year = 2023;
+        this.cityMpg = combinedMpg;
+        this.highwayMpg = combinedMpg;
         this.combinedMpg = combinedMpg;
     }
 }
