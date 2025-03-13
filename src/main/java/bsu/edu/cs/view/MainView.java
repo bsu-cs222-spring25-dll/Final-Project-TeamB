@@ -55,6 +55,7 @@ public class MainView extends BorderPane {
     private HBox createTopSection() {
         HBox topSection = new HBox(20);
         topSection.setPadding(new Insets(10));
+        topSection.getStyleClass().add("top-section");
 
         Label gasPriceLabel = new Label("Gas Price ($):");
         TextField gasPriceField = new TextField(String.valueOf(calculator.annualGasPrice));
@@ -86,6 +87,7 @@ public class MainView extends BorderPane {
         panel.setHgap(10);
         panel.setVgap(10);
         panel.setPadding(new Insets(10));
+        panel.getStyleClass().add("mpg-input-panel");
 
         Label directInputLabel = new Label("Or directly compare MPG values: ");
         directInputLabel.setStyle("-fx-font-weight: bold;");

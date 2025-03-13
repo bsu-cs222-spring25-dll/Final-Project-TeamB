@@ -22,7 +22,7 @@ public class FuelComparisonApp extends Application {
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
 
-        Scene scene = new Scene(scrollPane, screenBounds.getWidth() * 0.8, screenBounds.getHeight() * 0.8);
+        Scene scene = new Scene(scrollPane, 600,800);
 
         scene.getStylesheets().add("styles.css");
 

@@ -23,6 +23,7 @@ public class ComparisonResultView extends VBox {
     public ComparisonResultView(){
         super(15);
         this.setPadding(new Insets(10));
+        this.getStyleClass().add("results-view");
 
         Label titleLabel = new Label("Comparison Results");
         titleLabel.setFont(Font.font("System",FontWeight.BOLD, 16));
@@ -41,6 +42,12 @@ public class ComparisonResultView extends VBox {
         costChart.setTitle("Annual Fuel Cost Comparison");
         costChart.setAnimated(false);
         costChart.setLegendVisible(false);
+
+        titleLabel.getStyleClass().add("section-title");
+        savingsLabel.getStyleClass().add("savings-label");
+        fiveYearSavingsLabel.getStyleClass().add("savings-label");
+        efficientVehicleLabel.getStyleClass().add("efficient-label");
+        costChart.getStyleClass().add("chart");
 
         this.getChildren().addAll(titleLabel,annualCostsLabel,savingsLabel,fiveYearSavingsLabel,efficientVehicleLabel,costChart);
     }
