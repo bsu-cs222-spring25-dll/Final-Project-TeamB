@@ -16,12 +16,18 @@ public class FuelComparisonApp extends Application {
 
         //scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm());
 
+
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(mainView);
 
-        Scene scene = new Scene(scrollPane);
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+
+        Scene scene = new Scene(scrollPane, screenBounds.getWidth() * 0.8, screenBounds.getHeight() * 0.8);
+
+        scene.getStylesheets().add("styles.css");
 
         primaryStage.setResizable(true);
+
 
         primaryStage.setTitle("Vehicle Fuel Economy Comparison");
         primaryStage.setScene(scene);

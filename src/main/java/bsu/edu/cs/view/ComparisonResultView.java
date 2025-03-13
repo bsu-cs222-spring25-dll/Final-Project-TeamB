@@ -14,18 +14,17 @@ import javafx.scene.text.FontWeight;
 
 public class ComparisonResultView extends VBox {
 
-    private Label titleLabel;
-    private Label annualCostsLabel;
-    private Label savingsLabel;
-    private Label fiveYearSavingsLabel;
-    private Label efficientVehicleLabel;
-    private BarChart<String, Number> costChart;
+    private final Label annualCostsLabel;
+    private final Label savingsLabel;
+    private final Label fiveYearSavingsLabel;
+    private final Label efficientVehicleLabel;
+    private final BarChart<String, Number> costChart;
 
     public ComparisonResultView(){
         super(15);
         this.setPadding(new Insets(10));
 
-        titleLabel = new Label("Comparison Results");
+        Label titleLabel = new Label("Comparison Results");
         titleLabel.setFont(Font.font("System",FontWeight.BOLD, 16));
 
         annualCostsLabel = new Label("Annual fuel costs will appear here");
@@ -62,7 +61,8 @@ public class ComparisonResultView extends VBox {
         costChart.getData().clear();
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>(vehicle1.make + " " + vehicle1.model, annualCost1));
+        series.getData().add(new XYChart.Data<>(vehicle1.make + " " + vehicle1.model + " ", annualCost1));
+
         series.getData().add(new XYChart.Data<>(vehicle2.make + " " + vehicle2.model, annualCost2));
 
         costChart.getData().add(series);
