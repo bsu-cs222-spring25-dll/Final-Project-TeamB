@@ -8,10 +8,14 @@ public class Vehicle {
     public double highwayMpg;
     public double combinedMpg;
 
+    public Vehicle(String make,double combinedMpg){
+        this.make = make;
+        this.combinedMpg = combinedMpg;
+    }
+
     public Vehicle(String make, String model, double combinedMpg, int year) {
         this.make = make;
         this.model = model;
-        this.year = 2023;
         this.cityMpg = combinedMpg;
         this.highwayMpg = combinedMpg;
         this.combinedMpg = combinedMpg;
