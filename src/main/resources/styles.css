@@ -1,0 +1,13 @@
+.root {
+    -fx-font-size: 1.2em;
+}
+
+.button {
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+    -fx-background-radius: 0;
+    -fx-font-weight: bold;
+    -fx-padding: 15px;
+    -fx-background-color: #4287f5;
+    -fx-text-fill: white;
+}

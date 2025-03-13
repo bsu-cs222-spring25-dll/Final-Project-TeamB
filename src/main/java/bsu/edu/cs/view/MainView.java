@@ -41,7 +41,7 @@ public class MainView extends BorderPane {
         GridPane directMpgPanel = createDirectMpgPanel();
 
         Button calculateButton = new Button("Compare Vehicles");
-        calculateButton.setOnAction(_ -> compareVehicles());
+        calculateButton.setOnAction(e -> compareVehicles());
 
         VBox bottomSection = new VBox(10);
         bottomSection.setPadding(new Insets(10));
@@ -59,7 +59,7 @@ public class MainView extends BorderPane {
         Label gasPriceLabel = new Label("Gas Price ($):");
         TextField gasPriceField = new TextField(String.valueOf(calculator.annualGasPrice));
         gasPriceField.setPrefWidth(80);
-        gasPriceField.textProperty().addListener((_, oldVal, newVal) -> {
+        gasPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
             try {
                 calculator.annualGasPrice = Double.parseDouble(newVal);
             } catch (NumberFormatException e){
@@ -69,7 +69,7 @@ public class MainView extends BorderPane {
         Label milesLabel = new Label("Annual Miles:");
         TextField milesField = new TextField(String.valueOf(calculator.annualMiles));
         milesField.setPrefWidth(100);
-        milesField.textProperty().addListener((_, oldVal, newVal) -> {
+        milesField.textProperty().addListener((obs, oldVal, newVal) -> {
             try {
                 calculator.annualMiles = Integer.parseInt(newVal);
             } catch (NumberFormatException e) {
@@ -118,8 +118,8 @@ public class MainView extends BorderPane {
                 double mpg2 = Double.parseDouble(mpg2Field.getText().trim());
 
 
-                vehicle1 = new Vehicle("Vehicle 1", mpg1);
-                vehicle2 = new Vehicle("Vehicle 2", mpg2);
+                vehicle1 = new Vehicle("Vehicle","1", mpg1);
+                vehicle2 = new Vehicle("Vehicle","2", mpg2);
 
                 performComparison();
             } catch (NumberFormatException e) {
