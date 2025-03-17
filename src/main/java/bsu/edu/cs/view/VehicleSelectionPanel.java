@@ -23,19 +23,18 @@ public class VehicleSelectionPanel extends VBox {
 
 
     private ToggleGroup inputToggle;
-    private RadioButton databaseRadio;
+    private final RadioButton databaseRadio;
     private RadioButton manualRadio;
-    private GridPane manualInputPane;
-    private TextField makeField;
-    private TextField modelField;
-    private TextField yearField;
-    private TextField cityMpgField;
-    private TextField highwayMpgField;
+    private final GridPane manualInputPane;
+//    private TextField makeField;
+//    private TextField modelField;
+//    private TextField yearField;
+//    private TextField cityMpgField;
+//    private TextField highwayMpgField;
     private TextField combinedMpgField;
     private Button applyManualButton;
 
-    private VehicleDatabase database;
-
+    private final VehicleDatabase database;
     private Vehicle selectedVehicle;
 
     public VehicleSelectionPanel(String title){
@@ -46,7 +45,6 @@ public class VehicleSelectionPanel extends VBox {
         database = new VehicleDatabase();
 
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("title");
 
         inputToggle = new ToggleGroup();
         databaseRadio = new RadioButton("Select from database");
