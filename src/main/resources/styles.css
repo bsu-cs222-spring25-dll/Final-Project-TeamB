@@ -73,14 +73,10 @@
     -fx-background-radius: 5px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
 }
-.default-color0.chart-bar {
-    -fx-bar-fill: #555555; /* First vehicle (blue) */
+.chart-bar {
+    -fx-bar-fill: #555555;
+    -fx-bar-width: 20px;
 }
-
-.default-color1.chart-bar {
-    -fx-bar-fill: #111111; /* Second vehicle (red) */
-}
-
 
 .chart-bar.efficient {
     -fx-bar-fill: #2ecc71;

@@ -43,6 +43,8 @@ public class ComparisonResultView extends VBox {
         costChart.setTitle("Annual Fuel Cost Comparison");
         costChart.setAnimated(false);
         costChart.setLegendVisible(false);
+        costChart.setBarGap(0);
+        costChart.setCategoryGap(100);
 
         savingsLabel.getStyleClass().add("savings-label");
         fiveYearSavingsLabel.getStyleClass().add("savings-label");
@@ -75,13 +77,13 @@ public class ComparisonResultView extends VBox {
 
         costChart.getData().add(series);
         Node node = series.getData().get(0).getNode();
-        node.getStyleClass().add("default-color0.chart-bar");
+        node.getStyleClass().add("chart-bar");
         if (moreEfficientVehicle.contains(vehicle1.make + " " + vehicle1.model)) {
             node.getStyleClass().add("efficient");
         }
 
         Node node2 = series.getData().get(1).getNode();
-        node2.getStyleClass().add("default-color1.chart-bar");
+        node2.getStyleClass().add("chart-bar");
         if (moreEfficientVehicle.contains(vehicle2.make + " " + vehicle2.model)) {
             node2.getStyleClass().add("efficient");
         }
