@@ -1,6 +1,7 @@
 package bsu.edu.cs.view;
 
 
+import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
 import bsu.edu.cs.model.VehicleDatabase;
 import javafx.collections.FXCollections;
@@ -19,7 +20,6 @@ public class VehicleSelectionPanel extends VBox {
     private final TextField searchField;
     private final ComboBox<Vehicle> vehicleComboBox;
     private final Label mpgLabel;
-    private final TextField recalculate;
 
 
 
@@ -63,11 +63,6 @@ public class VehicleSelectionPanel extends VBox {
         searchField.setPromptText("Search Make or Model");
         Button searchButton = new Button("Search");
         searchButton.setOnAction(e-> searchVehicles());
-
-        recalculate = new TextField();
-        recalculate.setPromptText("Recalculate");
-        Button recalculateButton = new Button("Recalculate");
-        recalculateButton.setOnAction(e-> searchVehicles()); //placeholding at the moment, should be recalculating gas price and milage
 
         vehicleComboBox = new ComboBox<>();
         vehicleComboBox.setPromptText("Select a Vehicle");
@@ -136,7 +131,6 @@ public class VehicleSelectionPanel extends VBox {
 
 
         this.getChildren().addAll(
-                recalculateButton,
                 titleLabel,
                 searchField,
                 searchButton,
