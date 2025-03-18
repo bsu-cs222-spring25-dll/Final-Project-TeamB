@@ -2,6 +2,7 @@ package bsu.edu.cs.view;
 
 import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
+import com.sun.javafx.charts.Legend;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,12 +20,16 @@ public class MainView extends BorderPane {
 
     private TextField mpg1Field;
     private TextField mpg2Field;
+    private TextField recalculate;
 
     private final VehicleSelectionPanel leftPanel;
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
+    private Legend.LegendItem gasPriceField;
+    private Legend.LegendItem milesField;
 
-    public MainView(){
+
+    public MainView() {
         calculator = new FuelCalculator();
 
         HBox topSection = createTopSection();
@@ -32,9 +37,9 @@ public class MainView extends BorderPane {
         leftPanel = new VehicleSelectionPanel("Vehicle 1");
         rightPanel = new VehicleSelectionPanel("Vehicle 2");
 
-        HBox middleSection  = new HBox(20);
+        HBox middleSection = new HBox(20);
         middleSection.setPadding(new Insets(10));
-        middleSection.getChildren().addAll(leftPanel,rightPanel);
+        middleSection.getChildren().addAll(leftPanel, rightPanel);
 
         resultView = new ComparisonResultView();
 
@@ -45,7 +50,7 @@ public class MainView extends BorderPane {
 
         VBox bottomSection = new VBox(10);
         bottomSection.setPadding(new Insets(10));
-        bottomSection.getChildren().addAll(directMpgPanel,calculateButton, resultView);
+        bottomSection.getChildren().addAll( directMpgPanel, calculateButton, resultView);
 
         this.setTop(topSection);
         this.setCenter(middleSection);
@@ -60,29 +65,20 @@ public class MainView extends BorderPane {
         Label gasPriceLabel = new Label("Gas Price ($):");
         TextField gasPriceField = new TextField(String.valueOf(calculator.annualGasPrice));
         gasPriceField.setPrefWidth(80);
-        gasPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                calculator.annualGasPrice = Double.parseDouble(newVal);
-            } catch (NumberFormatException e){
-                gasPriceField.setText(oldVal);
-            }
-        });
         Label milesLabel = new Label("Annual Miles:");
         TextField milesField = new TextField(String.valueOf(calculator.annualMiles));
         milesField.setPrefWidth(100);
-        milesField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                calculator.annualMiles = Integer.parseInt(newVal);
-            } catch (NumberFormatException e) {
-                milesField.setText(oldVal);
-            }
-        });
 
-        topSection.getChildren().addAll(gasPriceLabel,gasPriceField,milesLabel,milesField);
+            recalculate = new TextField();   //option 1
+            recalculate.setPromptText("Recalculate");
+            Button recalculateButton = new Button("Recalculate");
+            recalculateButton.setOnAction(e -> recalculateCheck());
+
+        topSection.getChildren().addAll( gasPriceLabel, gasPriceField, milesLabel, milesField, recalculateButton);
         return topSection;
     }
 
-    private GridPane createDirectMpgPanel(){
+    private GridPane createDirectMpgPanel() {
         GridPane panel = new GridPane();
         panel.setHgap(10);
         panel.setVgap(10);
@@ -91,7 +87,7 @@ public class MainView extends BorderPane {
 
         Label directInputLabel = new Label("Or directly compare MPG values: ");
         directInputLabel.setStyle("-fx-font-weight: bold;");
-        panel.add(directInputLabel,0,0,2,1);
+        panel.add(directInputLabel, 0, 0, 2, 1);
 
         Label vehicle1Label = new Label("Vehicle 1 MPG:");
         mpg1Field = new TextField();
@@ -110,7 +106,7 @@ public class MainView extends BorderPane {
 
         return panel;
     }
-    private void compareVehicles(){
+    private void compareVehicles() {
         boolean usingDirectMpg = !mpg1Field.getText().trim().isEmpty() && !mpg2Field.getText().trim().isEmpty();
 
         if (usingDirectMpg) {
@@ -120,8 +116,8 @@ public class MainView extends BorderPane {
                 double mpg2 = Double.parseDouble(mpg2Field.getText().trim());
 
 
-                vehicle1 = new Vehicle("Vehicle","1", mpg1);
-                vehicle2 = new Vehicle("Vehicle","2", mpg2);
+                vehicle1 = new Vehicle("Vehicle", "1", mpg1);
+                vehicle2 = new Vehicle("Vehicle", "2", mpg2);
 
                 performComparison();
             } catch (NumberFormatException e) {
@@ -139,6 +135,7 @@ public class MainView extends BorderPane {
             }
         }
     }
+
     private void performComparison() {
         double annualCost1 = calculator.calculateAnnualFuelCost(vehicle1);
         double annualCost2 = calculator.calculateAnnualFuelCost(vehicle2);
@@ -147,5 +144,23 @@ public class MainView extends BorderPane {
         String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1, vehicle2);
 
         resultView.updateResults(vehicle1, vehicle2, annualCost1, annualCost2, savings, fiveYearSavings, moreEfficient);
+    }
+
+    private void recalculateCheck() {
+        //still constantly checking, needs to only check when button is pushed
+        gasPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                calculator.annualGasPrice = Double.parseDouble(newVal);
+            } catch (NumberFormatException e) {
+                gasPriceField.setText(oldVal);
+            }
+        });
+        milesField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                calculator.annualMiles = Integer.parseInt(newVal);
+            } catch (NumberFormatException e) {
+                milesField.setText(oldVal);
+            }
+        });
     }
 }
