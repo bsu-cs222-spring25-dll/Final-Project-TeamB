@@ -2,6 +2,7 @@ package bsu.edu.cs.view;
 import bsu.edu.cs.model.Vehicle;
 import bsu.edu.cs.model.VehicleDatabase;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -43,11 +44,11 @@ public class ComparisonResultView extends VBox {
         costChart.setAnimated(false);
         costChart.setLegendVisible(false);
 
-        titleLabel.getStyleClass().add("section-title");
         savingsLabel.getStyleClass().add("savings-label");
         fiveYearSavingsLabel.getStyleClass().add("savings-label");
         efficientVehicleLabel.getStyleClass().add("efficient-label");
         costChart.getStyleClass().add("chart");
+
 
         this.getChildren().addAll(titleLabel,annualCostsLabel,savingsLabel,fiveYearSavingsLabel,efficientVehicleLabel,costChart);
     }
@@ -73,6 +74,17 @@ public class ComparisonResultView extends VBox {
         series.getData().add(new XYChart.Data<>(vehicle2.make + " " + vehicle2.model, annualCost2));
 
         costChart.getData().add(series);
+        Node node = series.getData().get(0).getNode();
+        node.getStyleClass().add("default-color0.chart-bar");
+        if (moreEfficientVehicle.contains(vehicle1.make + " " + vehicle1.model)) {
+            node.getStyleClass().add("efficient");
+        }
+
+        Node node2 = series.getData().get(1).getNode();
+        node2.getStyleClass().add("default-color1.chart-bar");
+        if (moreEfficientVehicle.contains(vehicle2.make + " " + vehicle2.model)) {
+            node2.getStyleClass().add("efficient");
+        }
     }
 
     public void showError(String message){

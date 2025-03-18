@@ -32,8 +32,8 @@ public class MainView extends BorderPane {
         leftPanel = new VehicleSelectionPanel("Vehicle 1");
         rightPanel = new VehicleSelectionPanel("Vehicle 2");
 
-        HBox middleSection  = new HBox(20);
-        middleSection.setPadding(new Insets(10));
+        HBox middleSection  = new HBox();
+        middleSection.setPadding(new Insets(30,0,30,30));
         middleSection.getChildren().addAll(leftPanel,rightPanel);
 
         resultView = new ComparisonResultView();
@@ -54,7 +54,7 @@ public class MainView extends BorderPane {
 
     private HBox createTopSection() {
         HBox topSection = new HBox(20);
-        topSection.setPadding(new Insets(10));
+        topSection.setPadding(new Insets(30,0,30,30));
         topSection.getStyleClass().add("top-section");
 
         Label gasPriceLabel = new Label("Gas Price ($):");
