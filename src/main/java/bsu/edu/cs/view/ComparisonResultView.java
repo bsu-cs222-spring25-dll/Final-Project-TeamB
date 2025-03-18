@@ -1,6 +1,5 @@
 package bsu.edu.cs.view;
 import bsu.edu.cs.model.Vehicle;
-import bsu.edu.cs.model.VehicleDatabase;
 import javafx.geometry.Insets;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -16,7 +15,7 @@ public class ComparisonResultView extends VBox {
 
     private final Label annualCostsLabel;
     private final Label savingsLabel;
-    private final Label fiveYearSavingsLabel;
+    private final Label YearSavingsLabel;
     private final Label efficientVehicleLabel;
     private final BarChart<String, Number> costChart;
 
@@ -30,7 +29,7 @@ public class ComparisonResultView extends VBox {
 
         annualCostsLabel = new Label("Annual fuel costs will appear here");
         savingsLabel = new Label("");
-        fiveYearSavingsLabel = new Label("");
+        YearSavingsLabel = new Label("");
         efficientVehicleLabel = new Label("");
 
         CategoryAxis xAxis = new CategoryAxis();
@@ -45,22 +44,22 @@ public class ComparisonResultView extends VBox {
 
         titleLabel.getStyleClass().add("section-title");
         savingsLabel.getStyleClass().add("savings-label");
-        fiveYearSavingsLabel.getStyleClass().add("savings-label");
+        YearSavingsLabel.getStyleClass().add("savings-label");
         efficientVehicleLabel.getStyleClass().add("efficient-label");
         costChart.getStyleClass().add("chart");
 
-        this.getChildren().addAll(titleLabel,annualCostsLabel,savingsLabel,fiveYearSavingsLabel,efficientVehicleLabel,costChart);
+        this.getChildren().addAll(titleLabel,annualCostsLabel,savingsLabel, YearSavingsLabel,efficientVehicleLabel,costChart);
     }
 
     public void updateResults(Vehicle vehicle1, Vehicle vehicle2,
                               double annualCost1, double annualCost2,
-                              double annualSavings, double fiveYearSavings,
+                              double annualSavings, int yearsOwned, double YearSavings,
                               String moreEfficientVehicle) {
         annualCostsLabel.setText(String.format("Annual Fuel Costs: %s: $%.2f | %s: $%.2f",
                 vehicle1.make + " " + vehicle1.model, annualCost1,
                 vehicle2.make + " " + vehicle2.model, annualCost2));
-        savingsLabel.setText(String.format("Annual Savings: %.2f", annualSavings));
-        fiveYearSavingsLabel.setText(String.format("5-year Savings: $%.2f", fiveYearSavings));
+        savingsLabel.setText(String.format("Annual Savings: $%.2f", annualSavings));
+        YearSavingsLabel.setText(String.format(yearsOwned + " year Savings: $%.2f", YearSavings));
 
         String efficientText = "More Efficient Vehicle: " + moreEfficientVehicle;
         efficientVehicleLabel.setText(efficientText);
@@ -80,7 +79,7 @@ public class ComparisonResultView extends VBox {
         annualCostsLabel.setTextFill(Color.RED);
 
         savingsLabel.setText("");
-        fiveYearSavingsLabel.setText("");
+        YearSavingsLabel.setText("");
         costChart.getData().clear();
     }
 }
