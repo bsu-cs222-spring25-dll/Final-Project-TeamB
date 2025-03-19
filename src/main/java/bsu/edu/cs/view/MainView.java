@@ -2,7 +2,6 @@ package bsu.edu.cs.view;
 
 import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
-import com.sun.javafx.charts.Legend;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,24 +13,18 @@ import javafx.scene.layout.VBox;
 
 public class MainView extends BorderPane {
 
-    public Vehicle vehicle1;
-    public Vehicle vehicle2;
-    public FuelCalculator calculator;
+    private Vehicle vehicle1;
+    private Vehicle vehicle2;
+    private final FuelCalculator calculator;
     private TextField mpg1Field;
     private TextField mpg2Field;
-
-    public double yearsOwned;
-
-    private TextField recalculate;
-
+    private TextField gasPriceField;
+    private TextField milesField;
+    private TextField timeField;
 
     private final VehicleSelectionPanel leftPanel;
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
-    public TextField gasPriceField;
-    public TextField milesField;
-    public TextField timeField;
-
 
     public MainView() {
         calculator = new FuelCalculator();
@@ -67,23 +60,24 @@ public class MainView extends BorderPane {
         topSection.getStyleClass().add("top-section");
 
         Label gasPriceLabel = new Label("Gas Price ($):");
-        TextField gasPriceField = new TextField(String.valueOf(calculator.annualGasPrice));
+        gasPriceField = new TextField(String.valueOf(calculator.getAnnualGasPrice()));
         gasPriceField.setPrefWidth(80);
+
         Label milesLabel = new Label("Annual Miles:");
-        TextField milesField = new TextField(String.valueOf(calculator.annualMiles));
+        milesField = new TextField(String.valueOf(calculator.getAnnualMiles()));
         milesField.setPrefWidth(100);
 
         Label timeLabel = new Label("Number of Years: ");
-        TextField timeField = new TextField(String.valueOf(calculator.yearsOwned));
+        timeField = new TextField(String.valueOf(calculator.getYearsOwned()));
         timeField.setPrefWidth(80);
 
-        
-        recalculate = new TextField();   //option 1
-            recalculate.setPromptText("Recalculate");
-            Button recalculateButton = new Button("Recalculate");
-            recalculateButton.setOnAction(e -> recalculateCheck());
+        Button recalculateButton = new Button("Recalculate");
+        recalculateButton.setOnAction(e -> recalculateCheck());
 
-        topSection.getChildren().addAll(gasPriceLabel,gasPriceField,milesLabel,milesField, timeLabel, timeField, recalculateButton);
+        topSection.getChildren().addAll(gasPriceLabel, gasPriceField,
+                milesLabel,milesField,
+                timeLabel, timeField,
+                recalculateButton);
 
 
         return topSection;
@@ -126,17 +120,15 @@ public class MainView extends BorderPane {
                 double mpg1 = Double.parseDouble(mpg1Field.getText().trim());
                 double mpg2 = Double.parseDouble(mpg2Field.getText().trim());
 
-
-                vehicle1 = new Vehicle("Vehicle","1", mpg1, yearsOwned);
-                vehicle2 = new Vehicle("Vehicle","2", mpg2, yearsOwned);
-
+                int currentYear = 2025;
+                vehicle1 = new Vehicle("Vehicle","1", mpg1, currentYear);
+                vehicle2 = new Vehicle("Vehicle","2", mpg2, currentYear);
 
                 performComparison();
             } catch (NumberFormatException e) {
                 resultView.showError("Please enter valid MPG values");
             }
         } else {
-
             vehicle1 = leftPanel.getSelectedVehicle();
             vehicle2 = rightPanel.getSelectedVehicle();
 
@@ -151,36 +143,35 @@ public class MainView extends BorderPane {
     private void performComparison() {
         double annualCost1 = calculator.calculateAnnualFuelCost(vehicle1);
         double annualCost2 = calculator.calculateAnnualFuelCost(vehicle2);
+        double yearCost1 = calculator.calculateYearsOwnedFuelCost(vehicle1);
+        double yearCost2 = calculator.calculateYearsOwnedFuelCost(vehicle2);
         double savings = calculator.calculateOneYearSavings(vehicle1, vehicle2);
-        double YearSavings = calculator.calculateYearSavings(vehicle1, vehicle2);
+        double yearSavings = calculator.calculateYearSavings(vehicle1, vehicle2);
         String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1, vehicle2);
 
-        resultView.updateResults(vehicle1, vehicle2, annualCost1, annualCost2, savings, calculator.yearsOwned, YearSavings, moreEfficient);
+        resultView.updateResults(vehicle1, vehicle2, annualCost1, annualCost2, yearCost1,yearCost2, savings, calculator.getYearsOwned(), yearSavings, moreEfficient);
     }
 
     private void recalculateCheck() {
-        //still constantly checking, needs to only check when button is pushed
-        gasPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                calculator.annualGasPrice = Double.parseDouble(newVal);
-            } catch (NumberFormatException e) {
-                gasPriceField.setText(oldVal);
+        try {
+            double gasPrice = Double.parseDouble(gasPriceField.getText());
+            int miles = Integer.parseInt(milesField.getText());
+            int years = Integer.parseInt(timeField.getText());
+
+            if (gasPrice <= 0 || miles <= 0 || years <= 0) {
+                resultView.showError("Values must be greater than zero");
+                return;
             }
-        });
-        milesField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                calculator.annualMiles = Integer.parseInt(newVal);
-            } catch (NumberFormatException e) {
-                milesField.setText(oldVal);
-            }
-        });
-        timeField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try{
-                calculator.yearsOwned = Integer.parseInt(newVal);
-            } catch (NumberFormatException e){
-                timeField.setText(oldVal);
-            }
-        });
+
+            calculator.setAnnualGasPrice(gasPrice);
+            calculator.setAnnualMiles(miles);
+            calculator.setYearsOwned(years);
+
+            resultView.showSuccess("Values updated successfully!");
+
+        } catch (NumberFormatException e) {
+            resultView.showError("Please enter valid numbers!");
+        }
 
     }
 }

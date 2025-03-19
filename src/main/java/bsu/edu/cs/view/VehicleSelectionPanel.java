@@ -1,7 +1,6 @@
 package bsu.edu.cs.view;
 
 
-import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
 import bsu.edu.cs.model.VehicleDatabase;
 import javafx.collections.FXCollections;
@@ -21,19 +20,12 @@ public class VehicleSelectionPanel extends VBox {
     private final ComboBox<Vehicle> vehicleComboBox;
     private final Label mpgLabel;
 
-
-
-    private ToggleGroup inputToggle;
     private final RadioButton databaseRadio;
-    private RadioButton manualRadio;
     private final GridPane manualInputPane;
-//    private TextField makeField;
-//    private TextField modelField;
-//    private TextField yearField;
-//    private TextField cityMpgField;
-//    private TextField highwayMpgField;
-    private TextField combinedMpgField;
-    private Button applyManualButton;
+    private final TextField combinedMpgField;
+    private final TextField makeField;
+    private final TextField modelField;
+    private final TextField yearField;
 
     private final VehicleDatabase database;
     private Vehicle selectedVehicle;
@@ -46,10 +38,11 @@ public class VehicleSelectionPanel extends VBox {
         database = new VehicleDatabase();
 
         Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("panel-title");
 
-        inputToggle = new ToggleGroup();
+        ToggleGroup inputToggle = new ToggleGroup();
         databaseRadio = new RadioButton("Select from database");
-        manualRadio = new RadioButton("Enter manually");
+        RadioButton manualRadio = new RadioButton("Enter manually");
         databaseRadio.setToggleGroup(inputToggle);
         manualRadio.setToggleGroup(inputToggle);
         databaseRadio.setSelected(true);
@@ -83,7 +76,7 @@ public class VehicleSelectionPanel extends VBox {
                 if (vehicle == null) {
                     return null;
                 }
-                return vehicle.year + " " + vehicle.make + " " + vehicle.model;
+                return vehicle.getYear() + " " + vehicle.getMake() + " " + vehicle.getModel();
             }
             @Override
             public Vehicle fromString(String string) {
@@ -99,16 +92,30 @@ public class VehicleSelectionPanel extends VBox {
         manualInputPane.setHgap(10);
         manualInputPane.setVgap(5);
 
+        makeField = new TextField();
+        makeField.setPromptText("Make (e.g. Toyota)");
+
+        modelField = new TextField();
+        modelField.setPromptText("Model (e.g. Camry)");
+
+        yearField = new TextField();
+        yearField.setPromptText("Year (e.g. 2023)");
 
         combinedMpgField = new TextField();
         combinedMpgField.setPromptText("Combined MPG");
 
+        manualInputPane.add(new Label("Make:"), 0, 0);
+        manualInputPane.add(makeField, 1, 0);
+        manualInputPane.add(new Label("Model:"), 0, 1);
+        manualInputPane.add(modelField, 1, 1);
+        manualInputPane.add(new Label("Year:"), 0, 2);
+        manualInputPane.add(yearField, 1, 2);
+        manualInputPane.add(new Label("Combined MPG:"), 0, 3);
+        manualInputPane.add(combinedMpgField, 1, 3);
 
-        manualInputPane.add(new Label("Combined MPG:"), 0, 5);
-        manualInputPane.add(combinedMpgField, 1, 5);
-
-        applyManualButton = new Button("Apply");
-        manualInputPane.add(applyManualButton, 1, 6);
+        Button applyManualButton = new Button("Apply");
+        applyManualButton.setOnAction(e -> applyManualEntry());
+        manualInputPane.add(applyManualButton, 1, 4);
 
         manualInputPane.setVisible(false);
 
@@ -116,7 +123,7 @@ public class VehicleSelectionPanel extends VBox {
 
         loadDefaultVehicles();
 
-        inputToggle.selectedToggleProperty().addListener((observable, oldValue,newValue) -> {
+        inputToggle.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == databaseRadio) {
                 databaseSelectionBox.setVisible(true);
                 manualInputPane.setVisible(false);
@@ -132,9 +139,9 @@ public class VehicleSelectionPanel extends VBox {
 
         this.getChildren().addAll(
                 titleLabel,
-                searchField,
-                searchButton,
-                vehicleComboBox,
+                toggleBox,
+                databaseSelectionBox,
+                manualInputPane,
                 mpgLabel
         );
 
@@ -168,17 +175,37 @@ public class VehicleSelectionPanel extends VBox {
         }
     }
 
+    private void applyManualEntry() {
+        try {
+            String make = makeField.getText().trim();
+            String model = modelField.getText().trim();
+            double mpg = Double.parseDouble(combinedMpgField.getText().trim());
+            int year = Integer.parseInt(yearField.getText().trim());
+
+            if (make.isEmpty() || model.isEmpty()) {
+                mpgLabel.setText("Please enter both make and model");
+                return;
+            }
+
+            selectedVehicle = new Vehicle(make, model, mpg, year);
+            updateMpgLabel();
+
+        } catch (NumberFormatException e) {
+            mpgLabel.setText("Please enter valid numeric values for MPG and year");
+        }
+    }
 
     private void updateMpgLabel(){
         if (selectedVehicle != null){
             mpgLabel.setText(String.format("City: %.1f MPG, Highway %.1f MPG, Combined %.1f MPG",
-                    selectedVehicle.cityMpg,
-                    selectedVehicle.highwayMpg,
-                    selectedVehicle.combinedMpg));
+                    selectedVehicle.getCityMpg(),
+                    selectedVehicle.getHighwayMpg(),
+                    selectedVehicle.getCombinedMpg()));
         } else{
             mpgLabel.setText("MPG: N/A");
         }
     }
+
     public Vehicle getSelectedVehicle(){
         return selectedVehicle;
     }
