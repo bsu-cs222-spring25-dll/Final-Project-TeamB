@@ -1,6 +1,7 @@
 package bsu.edu.cs.view;
 
 
+import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
 import bsu.edu.cs.model.VehicleDatabase;
 import javafx.collections.FXCollections;
