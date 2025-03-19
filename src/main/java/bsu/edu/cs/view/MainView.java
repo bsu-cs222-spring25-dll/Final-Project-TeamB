@@ -28,8 +28,9 @@ public class MainView extends BorderPane {
     private final VehicleSelectionPanel leftPanel;
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
-    private Legend.LegendItem gasPriceField;
-    private Legend.LegendItem milesField;
+    public TextField gasPriceField;
+    public TextField milesField;
+    public TextField timeField;
 
 
     public MainView() {
@@ -72,30 +73,17 @@ public class MainView extends BorderPane {
         TextField milesField = new TextField(String.valueOf(calculator.annualMiles));
         milesField.setPrefWidth(100);
 
-        milesField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                calculator.annualMiles = Integer.parseInt(newVal);
-            } catch (NumberFormatException e) {
-                milesField.setText(oldVal);
-            }
-        });
         Label timeLabel = new Label("Number of Years: ");
         TextField timeField = new TextField(String.valueOf(calculator.yearsOwned));
         timeField.setPrefWidth(80);
-        timeField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try{
-                calculator.yearsOwned = Integer.parseInt(newVal);
-            } catch (NumberFormatException e){
-                timeField.setText(oldVal);
-            }
-        });
+
         
         recalculate = new TextField();   //option 1
             recalculate.setPromptText("Recalculate");
             Button recalculateButton = new Button("Recalculate");
             recalculateButton.setOnAction(e -> recalculateCheck());
 
-        topSection.getChildren().addAll(gasPriceLabel,gasPriceField,milesLabel,milesField, recalculateButton, timeLabel, timeField);
+        topSection.getChildren().addAll(gasPriceLabel,gasPriceField,milesLabel,milesField, timeLabel, timeField, recalculateButton);
 
 
         return topSection;
@@ -186,5 +174,13 @@ public class MainView extends BorderPane {
                 milesField.setText(oldVal);
             }
         });
+        timeField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try{
+                calculator.yearsOwned = Integer.parseInt(newVal);
+            } catch (NumberFormatException e){
+                timeField.setText(oldVal);
+            }
+        });
+
     }
 }
