@@ -27,8 +27,8 @@ public class VehicleDatabaseTest {
 
     @Test
     public void searchVehicleByMake(){
-        List<Vehicle> toyotas = database.getDefaultVehicles();
+        List<Vehicle> toyota = database.searchVehicles("Toyota");
 
-        assertEquals(2,toyotas.size());
+        assertEquals(2,toyota.size());
     }
 }

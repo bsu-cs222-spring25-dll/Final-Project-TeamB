@@ -22,7 +22,7 @@ public class FuelCalculatorTest {
         double priusCost = calculator.calculateAnnualFuelCost(highEfficiencyVehicle);
         assertEquals(937.50,priusCost,0.01);
         double silveradoCost = calculator.calculateAnnualFuelCost(lowEfficiencyVehicle);
-        assertEquals(937.50,silveradoCost,0.01);
+        assertEquals(3281.25,silveradoCost,0.01);
     }
 
     @Test
@@ -44,8 +44,8 @@ public class FuelCalculatorTest {
     }
     @Test
     public void SameEfficiencyTest(){
-        Vehicle vehicle1 = new Vehicle("Honda","Accord",31, 2);
-        Vehicle vehicle2 = new Vehicle("Honda","Civic",31, 2);
+        Vehicle vehicle1 = new Vehicle("Honda","Accord",31, 2023);
+        Vehicle vehicle2 = new Vehicle("Honda","Civic",31, 2023);
         String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1,vehicle2);
         assertEquals("Both vehicles have the same efficiency",moreEfficient);
     }
