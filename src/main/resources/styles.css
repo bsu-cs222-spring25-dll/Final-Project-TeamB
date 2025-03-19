@@ -36,10 +36,12 @@
 }
 
 //ComparisonResultView
-.savings-label {
+.comparison-label {
+    -fx-font-color: #cccccc;
     -fx-font-size: 12px;
 }
 .chart {
+    -fx-font-size: 14pt;
     -fx-padding: 10px;
     -fx-background-color: transparent;
 }

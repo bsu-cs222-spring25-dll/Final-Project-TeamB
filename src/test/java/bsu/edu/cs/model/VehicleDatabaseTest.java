@@ -9,10 +9,12 @@ import java.util.List;
 
 public class VehicleDatabaseTest {
     private VehicleDatabase database;
+
     @BeforeEach
     public void setUp(){
         database = new VehicleDatabase();
     }
+
     @Test
     public void getDefaultVehicles(){
         List<Vehicle> vehicles = database.getDefaultVehicles();
@@ -20,8 +22,7 @@ public class VehicleDatabaseTest {
         assertEquals(4,vehicles.size());
 
         Vehicle prius = vehicles.getFirst();
-
-        assertEquals("Prius",prius.model);
+        assertEquals("Prius", prius.getModel());
     }
 
     @Test

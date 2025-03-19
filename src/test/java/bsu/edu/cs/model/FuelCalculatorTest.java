@@ -13,8 +13,8 @@ public class FuelCalculatorTest {
     @BeforeEach
     public void setUp(){
         calculator = new FuelCalculator();
-        highEfficiencyVehicle = new Vehicle("Toyota","Prius",56, 2);
-        lowEfficiencyVehicle = new Vehicle("Chevrolet","Silverado 1500",16, 2);
+        highEfficiencyVehicle = new Vehicle("Toyota","Prius",56, 2024);
+        lowEfficiencyVehicle = new Vehicle("Chevrolet","Silverado 1500",16, 2004);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class FuelCalculatorTest {
     @Test
     public void getMoreEfficientVehicleTest(){
         String moreEfficient = calculator.getMoreEfficientVehicle(highEfficiencyVehicle,lowEfficiencyVehicle);
-        assertEquals(highEfficiencyVehicle.make + " " + highEfficiencyVehicle.model,moreEfficient);
+        assertEquals(highEfficiencyVehicle.getMake() + " " + highEfficiencyVehicle.getModel(),moreEfficient);
     }
     @Test
     public void SameEfficiencyTest(){
