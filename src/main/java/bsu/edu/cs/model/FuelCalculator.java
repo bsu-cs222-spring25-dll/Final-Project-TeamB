@@ -3,10 +3,12 @@ package bsu.edu.cs.model;
 public class FuelCalculator {
     public double annualGasPrice;
     public double annualMiles;
+    public int yearsOwned;
 
     public FuelCalculator() {
         this.annualGasPrice = 3.50;
         this.annualMiles = 15000;
+        this.yearsOwned = 1;
     }
 
     public double calculateAnnualFuelCost(Vehicle vehicle){
@@ -20,8 +22,13 @@ public class FuelCalculator {
         return Math.abs(cost1 - cost2);
     }
 
-    public double calculateFiveYearSavings(Vehicle vehicle1, Vehicle vehicle2){
-        return calculateOneYearSavings(vehicle1,vehicle2) * 5;
+    public double calculateYearSavings(Vehicle vehicle1, Vehicle vehicle2){
+        double time = yearsOwned;
+        if(time > 0){
+            return calculateOneYearSavings(vehicle1,vehicle2) * yearsOwned;
+        } else{
+            return calculateOneYearSavings(vehicle1,vehicle2);
+        }
     }
 
     public String getMoreEfficientVehicle(Vehicle vehicle1, Vehicle vehicle2) {

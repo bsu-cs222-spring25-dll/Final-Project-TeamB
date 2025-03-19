@@ -1,5 +1,7 @@
 package bsu.edu.cs.model;
 
+import bsu.edu.cs.view.MainView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class VehicleDatabase {
         vehicles.add(new Vehicle("Toyota","Prius",56, 2023));
         vehicles.add(new Vehicle("Toyota","Camry",31, 2023));
         vehicles.add(new Vehicle("Honda","Ridgeline",20, 2023));
-        vehicles.add(new Vehicle("Tesla","Model 3",132, 2023));
+        vehicles.add(new Vehicle("Chevrolet","Silverado 1500",16, 2023));
 
         return vehicles;
     }

@@ -1,6 +1,7 @@
 package bsu.edu.cs.view;
 
 
+import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
 import bsu.edu.cs.model.VehicleDatabase;
 import javafx.collections.FXCollections;
@@ -15,35 +16,36 @@ import java.util.List;
 
 
 public class VehicleSelectionPanel extends VBox {
+
     private final TextField searchField;
     private final ComboBox<Vehicle> vehicleComboBox;
     private final Label mpgLabel;
 
 
+
     private ToggleGroup inputToggle;
-    private RadioButton databaseRadio;
+    private final RadioButton databaseRadio;
     private RadioButton manualRadio;
-    private GridPane manualInputPane;
-    private TextField makeField;
-    private TextField modelField;
-    private TextField yearField;
-    private TextField cityMpgField;
-    private TextField highwayMpgField;
+    private final GridPane manualInputPane;
+//    private TextField makeField;
+//    private TextField modelField;
+//    private TextField yearField;
+//    private TextField cityMpgField;
+//    private TextField highwayMpgField;
     private TextField combinedMpgField;
     private Button applyManualButton;
 
-    private VehicleDatabase database;
-
+    private final VehicleDatabase database;
     private Vehicle selectedVehicle;
 
     public VehicleSelectionPanel(String title){
         super(10);
         this.setPadding(new Insets(10));
+        this.getStyleClass().add("vehicle-panel");
 
         database = new VehicleDatabase();
 
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
         inputToggle = new ToggleGroup();
         databaseRadio = new RadioButton("Select from database");
@@ -89,7 +91,7 @@ public class VehicleSelectionPanel extends VBox {
             }
         });
 
-
+        vehicleComboBox.getStyleClass().add("combo-box");
 
         databaseSelectionBox.getChildren().addAll(searchField,searchButton,vehicleComboBox);
 
@@ -124,6 +126,10 @@ public class VehicleSelectionPanel extends VBox {
             }
         });
 
+        searchButton.getStyleClass().add("button");
+        mpgLabel.getStyleClass().add("mpg-value");
+
+
         this.getChildren().addAll(
                 titleLabel,
                 searchField,
@@ -131,6 +137,8 @@ public class VehicleSelectionPanel extends VBox {
                 vehicleComboBox,
                 mpgLabel
         );
+
+
 
     }
 
