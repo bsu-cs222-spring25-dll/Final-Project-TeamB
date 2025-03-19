@@ -17,10 +17,13 @@ public class MainView extends BorderPane {
     public Vehicle vehicle1;
     public Vehicle vehicle2;
     public FuelCalculator calculator;
-
     private TextField mpg1Field;
     private TextField mpg2Field;
+
+    public double yearsOwned;
+
     private TextField recalculate;
+
 
     private final VehicleSelectionPanel leftPanel;
     private final VehicleSelectionPanel rightPanel;
@@ -69,12 +72,32 @@ public class MainView extends BorderPane {
         TextField milesField = new TextField(String.valueOf(calculator.annualMiles));
         milesField.setPrefWidth(100);
 
-            recalculate = new TextField();   //option 1
+        milesField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                calculator.annualMiles = Integer.parseInt(newVal);
+            } catch (NumberFormatException e) {
+                milesField.setText(oldVal);
+            }
+        });
+        Label timeLabel = new Label("Number of Years: ");
+        TextField timeField = new TextField(String.valueOf(calculator.yearsOwned));
+        timeField.setPrefWidth(80);
+        timeField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try{
+                calculator.yearsOwned = Integer.parseInt(newVal);
+            } catch (NumberFormatException e){
+                timeField.setText(oldVal);
+            }
+        });
+        
+        recalculate = new TextField();   //option 1
             recalculate.setPromptText("Recalculate");
             Button recalculateButton = new Button("Recalculate");
             recalculateButton.setOnAction(e -> recalculateCheck());
 
-        topSection.getChildren().addAll( gasPriceLabel, gasPriceField, milesLabel, milesField, recalculateButton);
+        topSection.getChildren().addAll(gasPriceLabel,gasPriceField,milesLabel,milesField, recalculateButton, timeLabel, timeField);
+
+
         return topSection;
     }
 
@@ -116,8 +139,9 @@ public class MainView extends BorderPane {
                 double mpg2 = Double.parseDouble(mpg2Field.getText().trim());
 
 
-                vehicle1 = new Vehicle("Vehicle", "1", mpg1);
-                vehicle2 = new Vehicle("Vehicle", "2", mpg2);
+                vehicle1 = new Vehicle("Vehicle","1", mpg1, yearsOwned);
+                vehicle2 = new Vehicle("Vehicle","2", mpg2, yearsOwned);
+
 
                 performComparison();
             } catch (NumberFormatException e) {
@@ -140,10 +164,10 @@ public class MainView extends BorderPane {
         double annualCost1 = calculator.calculateAnnualFuelCost(vehicle1);
         double annualCost2 = calculator.calculateAnnualFuelCost(vehicle2);
         double savings = calculator.calculateOneYearSavings(vehicle1, vehicle2);
-        double fiveYearSavings = calculator.calculateFiveYearSavings(vehicle1, vehicle2);
+        double YearSavings = calculator.calculateYearSavings(vehicle1, vehicle2);
         String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1, vehicle2);
 
-        resultView.updateResults(vehicle1, vehicle2, annualCost1, annualCost2, savings, fiveYearSavings, moreEfficient);
+        resultView.updateResults(vehicle1, vehicle2, annualCost1, annualCost2, savings, calculator.yearsOwned, YearSavings, moreEfficient);
     }
 
     private void recalculateCheck() {

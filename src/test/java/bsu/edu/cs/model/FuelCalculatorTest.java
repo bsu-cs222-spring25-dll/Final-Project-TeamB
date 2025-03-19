@@ -13,8 +13,8 @@ public class FuelCalculatorTest {
     @BeforeEach
     public void setUp(){
         calculator = new FuelCalculator();
-        highEfficiencyVehicle = new Vehicle("Toyota","Prius",56);
-        lowEfficiencyVehicle = new Vehicle("Chevrolet","Silverado 1500",16);
+        highEfficiencyVehicle = new Vehicle("Toyota","Prius",56, 2);
+        lowEfficiencyVehicle = new Vehicle("Chevrolet","Silverado 1500",16, 2);
     }
 
     @Test
@@ -33,9 +33,9 @@ public class FuelCalculatorTest {
         assertEquals(2343.75, savingsReversed, 0.01);
     }
     @Test
-    public void calculateFiveYearSavingsTest(){
-        double fiveYearSavings = calculator.calculateFiveYearSavings(highEfficiencyVehicle,lowEfficiencyVehicle);
-        assertEquals(11718.75,fiveYearSavings,0.01);
+    public void calculateYearSavingsTest(){
+        double YearSavings = calculator.calculateYearSavings(highEfficiencyVehicle,lowEfficiencyVehicle);
+        assertEquals(11718.75,YearSavings,0.01);
     }
     @Test
     public void getMoreEfficientVehicleTest(){
@@ -44,8 +44,8 @@ public class FuelCalculatorTest {
     }
     @Test
     public void SameEfficiencyTest(){
-        Vehicle vehicle1 = new Vehicle("Honda","Accord",31);
-        Vehicle vehicle2 = new Vehicle("Honda","Civic",31);
+        Vehicle vehicle1 = new Vehicle("Honda","Accord",31, 2);
+        Vehicle vehicle2 = new Vehicle("Honda","Civic",31, 2);
         String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1,vehicle2);
         assertEquals("Both vehicles have the same efficiency",moreEfficient);
     }

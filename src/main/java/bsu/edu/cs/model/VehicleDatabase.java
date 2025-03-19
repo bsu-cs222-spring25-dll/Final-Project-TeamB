@@ -1,5 +1,7 @@
 package bsu.edu.cs.model;
 
+import bsu.edu.cs.view.MainView;
+
 import java.util.ArrayList;
 import java.util.List;
 

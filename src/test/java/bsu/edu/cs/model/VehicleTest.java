@@ -1,12 +1,13 @@
 package bsu.edu.cs.model;
 
+import bsu.edu.cs.view.MainView;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VehicleTest {
     @Test
     public void TestBasicConstructor(){
-        Vehicle vehicle = new Vehicle("Honda","Accord",32);
+        Vehicle vehicle = new Vehicle("Honda","Accord",32, 2);
 
         assertEquals("Honda",vehicle.make);
         assertEquals("Accord",vehicle.model);
@@ -18,7 +19,7 @@ public class VehicleTest {
     }
     @Test
     public void TestDetailedConstructor(){
-        Vehicle vehicle = new Vehicle("Toyota","Camry",32,2013);
+        Vehicle vehicle = new Vehicle("Toyota","Camry",32,2.0);
 
         assertEquals("Toyota",vehicle.make);
         assertEquals("Camry",vehicle.model);
