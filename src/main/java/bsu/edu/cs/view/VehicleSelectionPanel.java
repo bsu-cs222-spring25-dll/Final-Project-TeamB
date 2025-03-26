@@ -123,6 +123,7 @@ public class VehicleSelectionPanel extends VBox {
 
         loadDefaultVehicles();
 
+
         inputToggle.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == databaseRadio) {
                 databaseSelectionBox.setVisible(true);
@@ -150,7 +151,7 @@ public class VehicleSelectionPanel extends VBox {
     }
 
     private void loadDefaultVehicles() {
-        List<Vehicle> vehicles = database.getDefaultVehicles();
+        List<Vehicle> vehicles = database.getVehicles();
         if (vehicles != null && !vehicles.isEmpty()) {
             vehicleComboBox.setItems(FXCollections.observableArrayList(vehicles));
         } else{
@@ -180,14 +181,14 @@ public class VehicleSelectionPanel extends VBox {
             String make = makeField.getText().trim();
             String model = modelField.getText().trim();
             double mpg = Double.parseDouble(combinedMpgField.getText().trim());
-            int year = Integer.parseInt(yearField.getText().trim());
+            //int year = Integer.parseInt(yearField.getText().trim());
 
             if (make.isEmpty() || model.isEmpty()) {
                 mpgLabel.setText("Please enter both make and model");
                 return;
             }
 
-            selectedVehicle = new Vehicle(make, model, mpg, year);
+            selectedVehicle = new Vehicle(make, model, mpg);
             updateMpgLabel();
 
         } catch (NumberFormatException e) {

@@ -12,9 +12,14 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.openjfx:javafx-controls:17.0.1'
+    implementation 'org.openjfx:javafx-fxml:17.0.1'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation('com.opencsv:opencsv:4.2')
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
+
 }
 
 test {

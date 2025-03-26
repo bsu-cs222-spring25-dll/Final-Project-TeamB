@@ -8,12 +8,12 @@ public class Vehicle {
     private double highwayMpg;
     private double combinedMpg;
 
-    public Vehicle(String make,String model,double combinedMpg, int year){
+    public Vehicle(String make,String model,double combinedMpg,double cityMpg, double highwayMpg, int year){
         this.make = make;
         this.model = model;
         this.combinedMpg = combinedMpg;
-        this.cityMpg = combinedMpg * 0.9;
-        this.highwayMpg = combinedMpg * 1.1;
+        this.cityMpg = cityMpg;
+        this.highwayMpg = highwayMpg;
         this.year = year;
     }
 
@@ -23,6 +23,14 @@ public class Vehicle {
         this.cityMpg = combinedMpg * 0.9;
         this.highwayMpg = combinedMpg * 1.1;
         this.combinedMpg = combinedMpg;
+    }
+    public Vehicle(String make, String model, double combinedMpg, int year) {
+        this.make = make;
+        this.model = model;
+        this.cityMpg = combinedMpg * 0.9;
+        this.highwayMpg = combinedMpg * 1.1;
+        this.combinedMpg = combinedMpg;
+        this.year = year;
     }
     public String getMake() {
         return make;
