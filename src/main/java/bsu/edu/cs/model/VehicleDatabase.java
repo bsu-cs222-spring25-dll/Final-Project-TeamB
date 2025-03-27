@@ -1,8 +1,11 @@
 package bsu.edu.cs.model;
 
 import com.opencsv.CSVReader;
+import org.xml.sax.ErrorHandler;
+
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +16,11 @@ public class VehicleDatabase {
     public VehicleDatabase() {
         vehicles = new ArrayList<>();
         //vehicles.addAll(getDefaultVehicles());
-        try {
-            importVehiclesFromCSV("src/main/resources/vehicles.csv");
-        } catch (Exception e) {
-            System.out.println("Could not import vehicles from CSV: " + e.getMessage());
-        }
+//        try {
+//            importVehiclesFromCSV("src/main/resources/vehicles.csv");
+//        } catch (Exception e) {
+//            System.out.println("Could not import vehicles from CSV: " + e.getMessage());
+//        }
     }
 
 //    public List<Vehicle> getDefaultVehicles(){
@@ -31,39 +34,40 @@ public class VehicleDatabase {
 //        return vehicles;
 //    }
 
-    public void importVehiclesFromCSV(String filename) throws IOException {
-        try (CSVReader reader = new CSVReader(new FileReader(filename))) {
-            reader.readNext();
-
-            String[] nextLine;
-            //System.out.println(nextLine[63]);
-            while ((nextLine = reader.readNext()) != null) {
-                try {
-                    if (nextLine.length >= 63) {
-                        String make = nextLine[46];
-                        String model = nextLine[47];
-                        int year = Integer.parseInt(nextLine[63]);
-
-                        double combinedMpg;
-                        double highwayMpg;
-                        double cityMpg;
-                        try {
-                            combinedMpg = Double.parseDouble(nextLine[15]);
-                            highwayMpg = Double.parseDouble(nextLine[4]);
-                            cityMpg = Double.parseDouble(nextLine[34]);
-                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                            continue;
-                        }
-
-                        Vehicle vehicle = new Vehicle(make, model, combinedMpg,cityMpg,highwayMpg, year);
-                        vehicles.add(vehicle);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error parsing vehicle row: " + e.getMessage());
-                }
-            }
-        }
-    }
+//    public void importVehiclesFromCSV(String filename) throws IOException {
+//        try (CSVReader reader = new CSVReader(new FileReader(filename))) {
+//            reader.readNext();
+//
+//            String[] nextLine;
+//            //System.out.println(nextLine[63]);
+//            while ((nextLine = reader.readNext()) != null) {
+//                try {
+//                    if (nextLine.length >= 63) {
+//                        String make = nextLine[46];
+//                        String model = nextLine[47];
+//                        String trim = nextLine[47];
+//                        int year = Integer.parseInt(nextLine[63]);
+//
+//                        double combinedMpg;
+//                        double highwayMpg;
+//                        double cityMpg;
+//                        try {
+//                            combinedMpg = Double.parseDouble(nextLine[15]);
+//                            highwayMpg = Double.parseDouble(nextLine[4]);
+//                            cityMpg = Double.parseDouble(nextLine[34]);
+//                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+//                            continue;
+//                        }
+//
+//                        Vehicle vehicle = new Vehicle(make, model,trim,combinedMpg,cityMpg,highwayMpg, year);
+//                        vehicles.add(vehicle);
+//                    }
+//                } catch (Exception e) {
+//                    System.out.println("Error parsing vehicle row: " + e.getMessage());
+//                }
+//            }
+//        }
+//    }
     public List<Vehicle> getVehicles() {
         return vehicles;
     }

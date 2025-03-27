@@ -14,7 +14,7 @@ public class FuelComparisonApp extends Application {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(mainView);
 
-        Scene scene = new Scene(scrollPane, 1200,1200);
+        Scene scene = new Scene(scrollPane, 1200,1000);
 
         scene.getStylesheets().add("styles.css");
 

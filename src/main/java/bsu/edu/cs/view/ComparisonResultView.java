@@ -78,8 +78,8 @@ public class ComparisonResultView extends VBox {
 
         costChart.getData().clear();
 
-        double roundedAnnualCost1 = Math.round(annualCost1 * 5) / 5.0;
-        double roundedAnnualCost2 = Math.round(annualCost2 * 5) / 5.0;
+        double roundedAnnualCost1 = Math.round(annualCost1 * 5) / 5.00;
+        double roundedAnnualCost2 = Math.round(annualCost2 * 5) / 5.00;
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.getData().add(new XYChart.Data<>(vehicle1.getMake() + " " + vehicle1.getModel() + " $" + roundedAnnualCost1 + " ", annualCost1));
@@ -89,7 +89,7 @@ public class ComparisonResultView extends VBox {
         costChart.getData().add(series);
         Node node = series.getData().getFirst().getNode();
         node.getStyleClass().add("chart-bar");
-        if (moreEfficientVehicle.contains(vehicle1.getMake() + " " + vehicle1.getModel())) {
+        if (moreEfficientVehicle.contains(vehicle1.getMake() + " " + vehicle1.getModel() + " ")) {
             node.getStyleClass().add("efficient");
         }
 

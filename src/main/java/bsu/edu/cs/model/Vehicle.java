@@ -3,18 +3,20 @@ package bsu.edu.cs.model;
 public class Vehicle {
     private String make;
     private String model;
+    private String trim;
     private int year;
     private double cityMpg;
     private double highwayMpg;
     private double combinedMpg;
 
-    public Vehicle(String make,String model,double combinedMpg,double cityMpg, double highwayMpg, int year){
+    public Vehicle(String make, String model, String trim, double combinedMpg, double cityMpg, double highwayMpg, String year){
         this.make = make;
         this.model = model;
+        this.trim = trim;
         this.combinedMpg = combinedMpg;
         this.cityMpg = cityMpg;
         this.highwayMpg = highwayMpg;
-        this.year = year;
+        this.year = Integer.parseInt(year);
     }
 
     public Vehicle(String make, String model, double combinedMpg) {
@@ -35,49 +37,27 @@ public class Vehicle {
     public String getMake() {
         return make;
     }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
-
     public String getModel() {
         return model;
     }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public int getYear() {
         return year;
     }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public double getCityMpg() {
         return cityMpg;
     }
-
-    public void setCityMpg(double cityMpg) {
-        this.cityMpg = cityMpg;
-    }
-
     public double getHighwayMpg() {
         return highwayMpg;
     }
-
-    public void setHighwayMpg(double highwayMpg) {
-        this.highwayMpg = highwayMpg;
-    }
-
     public double getCombinedMpg() {
         return combinedMpg;
     }
-
-    public void setCombinedMpg(double combinedMpg) {
-        this.combinedMpg = combinedMpg;
+    public String getTrim() {
+        return trim;
+    }
+    @Override
+    public String toString() {
+        return String.format("%d %s %s %s", year, make, model, trim);
     }
 
 

@@ -15,15 +15,15 @@ public class VehicleDatabaseTest {
         database = new VehicleDatabase();
     }
 
-    @Test
-    public void getDefaultVehicles(){
-        List<Vehicle> vehicles = database.getDefaultVehicles();
-
-        assertEquals(4,vehicles.size());
-
-        Vehicle prius = vehicles.getFirst();
-        assertEquals("Prius", prius.getModel());
-    }
+//    @Test
+//    public void getDefaultVehicles(){
+//        List<Vehicle> vehicles = database.getDefaultVehicles();
+//
+//        assertEquals(4,vehicles.size());
+//
+//        Vehicle prius = vehicles.getFirst();
+//        assertEquals("Prius", prius.getModel());
+//    }
 
     @Test
     public void searchVehicleByMake(){
