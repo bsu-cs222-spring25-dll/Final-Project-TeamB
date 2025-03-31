@@ -1,86 +1,69 @@
 package bsu.edu.cs.model;
 
 import com.opencsv.CSVReader;
-import org.xml.sax.ErrorHandler;
-
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleDatabase {
-    //private String apiUrl = "https://vpic.nhtsa.dot.gov/api/";
     private final List<Vehicle> vehicles;
 
-    public VehicleDatabase() {
+    public VehicleDatabase(String csvFilePath) throws IOException {
         vehicles = new ArrayList<>();
-        //vehicles.addAll(getDefaultVehicles());
-//        try {
-//            importVehiclesFromCSV("src/main/resources/vehicles.csv");
-//        } catch (Exception e) {
-//            System.out.println("Could not import vehicles from CSV: " + e.getMessage());
-//        }
+        importVehiclesFromCSV(csvFilePath);
     }
 
-//    public List<Vehicle> getDefaultVehicles(){
-//        List<Vehicle> vehicles = new ArrayList<>();
-//
-//        vehicles.add(new Vehicle("Toyota","Prius",56, 2024));
-//        vehicles.add(new Vehicle("Toyota","Camry",31, 2023));
-//        vehicles.add(new Vehicle("Honda","Ridgeline",20, 2020));
-//        vehicles.add(new Vehicle("Chevrolet","Silverado 1500",16, 2004));
-//
-//        return vehicles;
-//    }
+    public void importVehiclesFromCSV(String filename) throws IOException {
+        try (CSVReader reader = new CSVReader(new FileReader(filename))) {
 
-//    public void importVehiclesFromCSV(String filename) throws IOException {
-//        try (CSVReader reader = new CSVReader(new FileReader(filename))) {
-//            reader.readNext();
-//
-//            String[] nextLine;
-//            //System.out.println(nextLine[63]);
-//            while ((nextLine = reader.readNext()) != null) {
-//                try {
-//                    if (nextLine.length >= 63) {
-//                        String make = nextLine[46];
-//                        String model = nextLine[47];
-//                        String trim = nextLine[47];
-//                        int year = Integer.parseInt(nextLine[63]);
-//
-//                        double combinedMpg;
-//                        double highwayMpg;
-//                        double cityMpg;
-//                        try {
-//                            combinedMpg = Double.parseDouble(nextLine[15]);
-//                            highwayMpg = Double.parseDouble(nextLine[4]);
-//                            cityMpg = Double.parseDouble(nextLine[34]);
-//                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-//                            continue;
-//                        }
-//
-//                        Vehicle vehicle = new Vehicle(make, model,trim,combinedMpg,cityMpg,highwayMpg, year);
-//                        vehicles.add(vehicle);
-//                    }
-//                } catch (Exception e) {
-//                    System.out.println("Error parsing vehicle row: " + e.getMessage());
-//                }
-//            }
-//        }
-//    }
-    public List<Vehicle> getVehicles() {
-        return vehicles;
+            String[] headers = reader.readNext();
+
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                try {
+                    Vehicle vehicle = getVehicle(nextLine);
+                    vehicles.add(vehicle);
+                } catch (Exception e) {
+                    System.out.println("Error parsing vehicle row: " + e.getMessage());
+                }
+            }
+        }
     }
 
-    public List<Vehicle> searchVehicles(String query){
+    private Vehicle getVehicle(String[] nextLine) {
+        String make = nextLine[46];
+        String model = nextLine[65];
+        String trim = nextLine[47];
+        String year = nextLine[63];
+
+        double cityMpg = Double.parseDouble(nextLine[34]);
+        double highwayMpg = Double.parseDouble(nextLine[4]);
+        double combinedMpg = Double.parseDouble(nextLine[15]);
+
+        return new Vehicle(make, model, trim, combinedMpg, cityMpg, highwayMpg, year);
+    }
+
+    public List<Vehicle> searchVehicles(String year, String make, String model, String trim) {
         List<Vehicle> results = new ArrayList<>();
-        String lowercaseQuery = query.toLowerCase();
+        for (Vehicle vehicle : vehicles) {
+            boolean yearMatch = year == null || year.isEmpty() || vehicle.getYear() == Integer.parseInt(year);
+            boolean makeMatch = make == null || make.isEmpty() ||
+                    vehicle.getMake().equalsIgnoreCase(make);
+            boolean modelMatch = model == null || model.isEmpty() ||
+                    vehicle.getModel().equalsIgnoreCase(model);
+            boolean trimMatch = trim == null || trim.isEmpty() ||
+                    (vehicle.getTrim() != null &&
+                            vehicle.getTrim().equalsIgnoreCase(trim));
 
-        for (Vehicle vehicle: getVehicles()){
-            if(vehicle.getMake().toLowerCase().contains(lowercaseQuery) || vehicle.getModel().toLowerCase().contains(lowercaseQuery)){
+            if (yearMatch && makeMatch && modelMatch && trimMatch) {
                 results.add(vehicle);
             }
         }
         return results;
+    }
+
+    public List<Vehicle> getVehicles() {
+        return vehicles;
     }
 }

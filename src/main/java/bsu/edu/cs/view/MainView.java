@@ -11,6 +11,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
+
 public class MainView extends BorderPane {
 
     private Vehicle vehicle1;
@@ -26,13 +28,14 @@ public class MainView extends BorderPane {
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
 
-    public MainView() {
+    public MainView() throws IOException {
         calculator = new FuelCalculator();
 
-        HBox topSection = createTopSection();
+        String csvFilePath = "src/main/resources/vehicles.csv";
 
-        leftPanel = new VehicleSelectionPanel("Vehicle 1");
-        rightPanel = new VehicleSelectionPanel("Vehicle 2");
+        HBox topSection = createTopSection();
+        leftPanel = new VehicleSelectionPanel("Vehicle 1", csvFilePath);
+        rightPanel = new VehicleSelectionPanel("Vehicle 2", csvFilePath);
 
         HBox middleSection = new HBox(20);
         middleSection.setPadding(new Insets(10));
