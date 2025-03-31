@@ -1,13 +1,13 @@
 package bsu.edu.cs.model;
 
 public class Vehicle {
-    private String make;
-    private String model;
+    private final String make;
+    private final String model;
     private String trim;
-    private int year;
-    private double cityMpg;
-    private double highwayMpg;
-    private double combinedMpg;
+    private final int year;
+    private final double cityMpg;
+    private final double highwayMpg;
+    private final double combinedMpg;
 
     public Vehicle(String make, String model, String trim, double combinedMpg, double cityMpg, double highwayMpg, String year){
         this.make = make;
@@ -19,13 +19,13 @@ public class Vehicle {
         this.year = Integer.parseInt(year);
     }
 
-    public Vehicle(String make, String model, double combinedMpg) {
-        this.make = make;
-        this.model = model;
-        this.cityMpg = combinedMpg * 0.9;
-        this.highwayMpg = combinedMpg * 1.1;
-        this.combinedMpg = combinedMpg;
-    }
+//    public Vehicle(String make, String model, double combinedMpg) {
+//        this.make = make;
+//        this.model = model;
+//        this.cityMpg = combinedMpg * 0.9;
+//        this.highwayMpg = combinedMpg * 1.1;
+//        this.combinedMpg = combinedMpg;
+//    }
     public Vehicle(String make, String model, double combinedMpg, int year) {
         this.make = make;
         this.model = model;
@@ -52,9 +52,7 @@ public class Vehicle {
     public double getCombinedMpg() {
         return combinedMpg;
     }
-    public String getTrim() {
-        return trim;
-    }
+    public String getTrim() {return trim;}
     @Override
     public String toString() {
         return String.format("%d %s %s %s", year, make, model, trim);

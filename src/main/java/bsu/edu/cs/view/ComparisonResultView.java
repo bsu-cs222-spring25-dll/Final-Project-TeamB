@@ -89,7 +89,7 @@ public class ComparisonResultView extends VBox {
         costChart.getData().add(series);
         Node node = series.getData().getFirst().getNode();
         node.getStyleClass().add("chart-bar");
-        if (moreEfficientVehicle.contains(vehicle1.getMake() + " " + vehicle1.getModel() + " ")) {
+        if (moreEfficientVehicle.contains(vehicle1.getMake() + " " + vehicle1.getModel())) {
             node.getStyleClass().add("efficient");
         }
 

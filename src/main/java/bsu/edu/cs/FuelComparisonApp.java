@@ -6,9 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class FuelComparisonApp extends Application {
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) throws IOException {
         MainView mainView = new MainView();
 
         ScrollPane scrollPane = new ScrollPane();
