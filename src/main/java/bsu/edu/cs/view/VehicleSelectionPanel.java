@@ -43,14 +43,18 @@ public class VehicleSelectionPanel extends VBox {
         yearCombo.setOnAction(e -> fetchMakes());
 
         makeCombo = createComboBox("Make:", 1, dropdownPane);
+        makeCombo.setDisable(true);
         makeCombo.setOnAction(e -> fetchModels());
 
         modelCombo = createComboBox("Model:", 2, dropdownPane);
+        modelCombo.setDisable(true);
         modelCombo.setOnAction(e -> fetchTrims());
 
         trimCombo = createComboBox("Trim:", 3, dropdownPane);
+        trimCombo.setDisable(true);
 
         selectButton = new Button ("Select Vehicle");
+        selectButton.setDisable(true);
         selectButton.setOnAction(e -> searchVehicle());
 
         dropdownPane.add(selectButton, 0,4,2,1);
@@ -81,12 +85,15 @@ public class VehicleSelectionPanel extends VBox {
                 .thenAcceptAsync(years -> Platform.runLater(() ->{
                     yearCombo.getItems().clear();
                     yearCombo.getItems().addAll(years);
+
+
                 }), Platform::runLater).exceptionally(this::handleError);
     }
 
     private void fetchMakes(){
         String selectedYear = yearCombo.getValue();
         if(selectedYear == null) return;
+        makeCombo.setDisable(false);
 
         fuelEconomyService.getMakes(selectedYear)
                 .thenAcceptAsync(makes -> Platform.runLater(() -> {
