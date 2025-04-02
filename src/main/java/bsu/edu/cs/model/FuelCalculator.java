@@ -4,11 +4,15 @@ public class FuelCalculator {
     private double annualGasPrice;
     private int annualMiles;
     private int yearsOwned;
+    private double electricityPricePerKWH;
+    private double kwhPerGallonEquivalent;
 
     public FuelCalculator() {
         this.annualGasPrice = 3.50;
         this.annualMiles = 15000;
         this.yearsOwned = 5;
+        this.electricityPricePerKWH = 0.13;
+        this.kwhPerGallonEquivalent = 33.705;
     }
 
     public Double getAnnualGasPrice() {
@@ -37,8 +41,14 @@ public class FuelCalculator {
 
 
     public double calculateAnnualFuelCost(Vehicle vehicle){
-        double gallonsUsed = annualMiles / vehicle.getCombinedMpg();
-        return gallonsUsed * annualGasPrice;
+        if (vehicle.getFuelType() != null){
+            double kwhPer100Miles = 3370.5/vehicle.getCombinedMpge();
+            double annualKwh = (kwhPer100Miles * annualMiles) / 100;
+            return annualKwh * electricityPricePerKWH;
+        } else {
+            double gallonsUsed = annualMiles / vehicle.getCombinedMpg();
+            return gallonsUsed * annualGasPrice;
+        }
     }
     public double calculateYearsOwnedFuelCost(Vehicle vehicle){
         return calculateAnnualFuelCost(vehicle) * yearsOwned;
