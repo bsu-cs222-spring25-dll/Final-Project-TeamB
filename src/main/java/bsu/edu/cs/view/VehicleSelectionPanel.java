@@ -176,16 +176,23 @@ public class VehicleSelectionPanel extends VBox {
     }
 
     private void displayVehicleDetails(Vehicle vehicle) {
-        String details = "Vehicle Details:\n" +
-                "Year: " + vehicle.getYear() + "\n" +
-                "Make: " + vehicle.getMake() + "\n" +
-                "Model: " + vehicle.getModel() + "\n" +
-                "Trim: " + vehicle.getTrim() + "\n" +
-                "City MPG: " + String.format("%.1f", vehicle.getCityMpg()) + "\n" +
-                "Highway MPG: " + String.format("%.1f", vehicle.getHighwayMpg()) + "\n" +
-                "Combined MPG: " + String.format("%.1f", vehicle.getCombinedMpg()) + "\n";
-
+        String details;
+        if (vehicle.getFuelType() != null){
+            details = "Vehicle Details:\n" +
+                    "Vehicle Type: " + String.format("%s", vehicle.getFuelType()) + "\n" +
+                    "City MPGe: " + String.format("%.1f", vehicle.getCityMpg()) + "\n" +
+                    "Highway MPGe: " + String.format("%.1f", vehicle.getHighwayMpg()) + "\n" +
+                    "Combined MPGe: " + String.format("%.1f", vehicle.getCombinedMpg()) + "\n" +
+                    "Combined kWh/100mi: " + String.format("%.1f", vehicle.getCombinedMpge()) + "\n";
+        }else {
+            details = "Vehicle Details:\n" +
+                    "Vehicle Type: " + "Gasoline" + "\n" +
+                    "City MPG: " + String.format("%.1f", vehicle.getCityMpg()) + "\n" +
+                    "Highway MPG: " + String.format("%.1f", vehicle.getHighwayMpg()) + "\n" +
+                    "Combined MPG: " + String.format("%.1f", vehicle.getCombinedMpg()) + "\n";
+        }
         resultArea.setText(details);
+
     }
 
     private Void handleError(Throwable throwable) {

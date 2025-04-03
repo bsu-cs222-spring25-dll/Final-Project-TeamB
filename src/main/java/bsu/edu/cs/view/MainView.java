@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 
 public class MainView extends BorderPane {
@@ -23,6 +22,7 @@ public class MainView extends BorderPane {
     private TextField gasPriceField;
     private TextField milesField;
     private TextField timeField;
+    private TextField electricField;
 
     private final VehicleSelectionPanel leftPanel;
     private final VehicleSelectionPanel rightPanel;
@@ -70,9 +70,13 @@ public class MainView extends BorderPane {
         milesField = new TextField(String.valueOf(calculator.getAnnualMiles()));
         milesField.setPrefWidth(100);
 
-        Label timeLabel = new Label("Number of Years: ");
+        Label timeLabel = new Label("Estimated Length of Ownership: ");
         timeField = new TextField(String.valueOf(calculator.getYearsOwned()));
         timeField.setPrefWidth(80);
+
+        Label electricityLabel = new Label("Electricity: ($/kwh)");
+        electricField = new TextField(String.valueOf(calculator.getElectricityPricePerKWH()));
+        electricField.setPrefWidth(80);
 
         Button recalculateButton = new Button("Recalculate");
         recalculateButton.setOnAction(e -> recalculateCheck());
@@ -80,6 +84,7 @@ public class MainView extends BorderPane {
         topSection.getChildren().addAll(gasPriceLabel, gasPriceField,
                 milesLabel,milesField,
                 timeLabel, timeField,
+                electricityLabel, electricField,
                 recalculateButton);
 
 
@@ -95,6 +100,8 @@ public class MainView extends BorderPane {
 
         Label directInputLabel = new Label("Or directly compare MPG values: ");
         directInputLabel.setStyle("-fx-font-weight: bold;");
+        directInputLabel.getStyleClass().add("mpg-input-panel");
+
         panel.add(directInputLabel, 0, 0, 2, 1);
 
         Label vehicle1Label = new Label("Vehicle 1 MPG:");
@@ -160,8 +167,9 @@ public class MainView extends BorderPane {
             double gasPrice = Double.parseDouble(gasPriceField.getText());
             int miles = Integer.parseInt(milesField.getText());
             int years = Integer.parseInt(timeField.getText());
+            double electricPrice = Double.parseDouble(electricField.getText());
 
-            if (gasPrice <= 0 || miles <= 0 || years <= 0) {
+            if (gasPrice <= 0 || miles <= 0 || years <= 0 || electricPrice <= 0) {
                 resultView.showError("Values must be greater than zero");
                 return;
             }
@@ -169,6 +177,7 @@ public class MainView extends BorderPane {
             calculator.setAnnualGasPrice(gasPrice);
             calculator.setAnnualMiles(miles);
             calculator.setYearsOwned(years);
+            calculator.setElectricityPricePerKWH(electricPrice);
 
             resultView.showSuccess("Values updated successfully!");
 
