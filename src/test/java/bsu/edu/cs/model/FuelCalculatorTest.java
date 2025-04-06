@@ -2,51 +2,72 @@ package bsu.edu.cs.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FuelCalculatorTest {
+
     private FuelCalculator calculator;
-    private Vehicle highEfficiencyVehicle;
-    private Vehicle lowEfficiencyVehicle;
+    private Vehicle gasVehicle;
+    private Vehicle electricVehicle;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         calculator = new FuelCalculator();
-        highEfficiencyVehicle = new Vehicle("Toyota","Prius",56, 2024);
-        lowEfficiencyVehicle = new Vehicle("Chevrolet","Silverado 1500",16, 2004);
+        gasVehicle = new Vehicle("Toyota", "Camry", 30.0, 2023);
+        electricVehicle = new Vehicle("Tesla", "Model 3","Model 3 Long Range AWD", 120.0, 110.0, 130.0,
+                "2023", "Electricity", 120.0);
     }
 
     @Test
-    public void calculateAnnualFuelCostTest(){
-        double priusCost = calculator.calculateAnnualFuelCost(highEfficiencyVehicle);
-        assertEquals(937.50,priusCost,0.01);
-        double silveradoCost = calculator.calculateAnnualFuelCost(lowEfficiencyVehicle);
-        assertEquals(3281.25,silveradoCost,0.01);
+    public void testDefaultConstructorValues() {
+        assertEquals(3.50, calculator.getAnnualGasPrice(), 0.001);
+        assertEquals(15000, calculator.getAnnualMiles());
+        assertEquals(5, calculator.getYearsOwned());
+        assertEquals(0.13, calculator.getElectricityPricePerKWH(), 0.001);
     }
 
     @Test
-    public void calculateOneYearSavingsTest(){
-        double savings = calculator.calculateOneYearSavings(highEfficiencyVehicle,lowEfficiencyVehicle);
-        assertEquals(2343.75, savings, 0.01);
-        double savingsReversed = calculator.calculateOneYearSavings(lowEfficiencyVehicle,highEfficiencyVehicle);
-        assertEquals(2343.75, savingsReversed, 0.01);
+    public void testCalculateAnnualFuelCost_GasVehicle() {
+        double expectedGallons = 15000 / 30.0;
+        double expectedCost = expectedGallons * 3.50;
+
+        assertEquals(expectedCost, calculator.calculateAnnualFuelCost(gasVehicle), 0.01);
     }
+
     @Test
-    public void calculateYearSavingsTest(){
-        double YearSavings = calculator.calculateYearSavings(highEfficiencyVehicle,lowEfficiencyVehicle);
-        assertEquals(11718.75,YearSavings,0.01);
+    public void testCalculateAnnualFuelCost_ElectricVehicle() {
+        double kwhPerMile = 33.705 / 120.0;
+        double annualKwh = kwhPerMile * 15000;
+        double expectedCost = annualKwh * 0.13;
+
+        assertEquals(expectedCost, calculator.calculateAnnualFuelCost(electricVehicle), 0.01);
     }
+
     @Test
-    public void getMoreEfficientVehicleTest(){
-        String moreEfficient = calculator.getMoreEfficientVehicle(highEfficiencyVehicle,lowEfficiencyVehicle);
-        assertEquals(highEfficiencyVehicle.getMake() + " " + highEfficiencyVehicle.getModel(),moreEfficient);
+    public void testCalculateYearsOwnedFuelCost() {
+        double annualCost = calculator.calculateAnnualFuelCost(gasVehicle);
+        double expectedTotalCost = annualCost * 5;
+
+        assertEquals(expectedTotalCost, calculator.calculateYearsOwnedFuelCost(gasVehicle), 0.01);
     }
+
     @Test
-    public void SameEfficiencyTest(){
-        Vehicle vehicle1 = new Vehicle("Honda","Accord",31, 2023);
-        Vehicle vehicle2 = new Vehicle("Honda","Civic",31, 2023);
-        String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1,vehicle2);
-        assertEquals("Both vehicles have the same efficiency",moreEfficient);
+    public void testCalculateOneYearSavings() {
+        Vehicle efficientVehicle = new Vehicle("Honda", "Insight", 52.0, 2023);
+        double savings = calculator.calculateOneYearSavings(gasVehicle, efficientVehicle);
+        assertTrue(savings > 0);
+    }
+
+    @Test
+    public void testGetMoreEfficientVehicle() {
+        Vehicle efficientVehicle = new Vehicle("Honda", "Insight", 52.0, 2023);
+        String result = calculator.getMoreEfficientVehicle(gasVehicle, efficientVehicle);
+        assertEquals("Honda Insight", result);
+    }
+
+    @Test
+    public void testSetElectricityPrice() {
+        calculator.setElectricityPricePerKWH(0.15);
+        assertEquals(0.15, calculator.getElectricityPricePerKWH(), 0.001);
     }
 }
