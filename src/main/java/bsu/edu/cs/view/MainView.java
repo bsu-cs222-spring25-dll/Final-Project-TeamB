@@ -46,7 +46,7 @@ public class MainView extends BorderPane {
         GridPane directMpgPanel = createDirectMpgPanel();
 
         Button calculateButton = new Button("Compare Vehicles");
-        calculateButton.setOnAction(e -> compareVehicles());
+        calculateButton.setOnAction(_ -> compareVehicles());
 
         VBox bottomSection = new VBox(10);
         bottomSection.setPadding(new Insets(10));
@@ -79,7 +79,7 @@ public class MainView extends BorderPane {
         electricField.setPrefWidth(80);
 
         Button recalculateButton = new Button("Recalculate");
-        recalculateButton.setOnAction(e -> recalculateCheck());
+        recalculateButton.setOnAction(_ -> recalculateCheck());
 
         topSection.getChildren().addAll(gasPriceLabel, gasPriceField,
                 milesLabel,milesField,
@@ -100,7 +100,7 @@ public class MainView extends BorderPane {
 
         Label directInputLabel = new Label("Or directly compare MPG values: ");
         directInputLabel.setStyle("-fx-font-weight: bold;");
-        directInputLabel.getStyleClass().add("mpg-input-panel");
+        directInputLabel .getStyleClass().add("mpg-input-panel");
 
         panel.add(directInputLabel, 0, 0, 2, 1);
 

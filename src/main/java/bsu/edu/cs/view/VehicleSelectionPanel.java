@@ -40,22 +40,22 @@ public class VehicleSelectionPanel extends VBox {
         dropdownPane.setVgap(10);
 
         yearCombo = createComboBox("Year:", 0,dropdownPane);
-        yearCombo.setOnAction(e -> fetchMakes());
+        yearCombo.setOnAction(_ -> fetchMakes());
 
         makeCombo = createComboBox("Make:", 1, dropdownPane);
         makeCombo.setDisable(true);
-        makeCombo.setOnAction(e -> fetchModels());
+        makeCombo.setOnAction(_ -> fetchModels());
 
         modelCombo = createComboBox("Model:", 2, dropdownPane);
         modelCombo.setDisable(true);
-        modelCombo.setOnAction(e -> fetchTrims());
+        modelCombo.setOnAction(_ -> fetchTrims());
 
         trimCombo = createComboBox("Trim:", 3, dropdownPane);
         trimCombo.setDisable(true);
 
         selectButton = new Button ("Select Vehicle");
         selectButton.setDisable(true);
-        selectButton.setOnAction(e -> searchVehicle());
+        selectButton.setOnAction(_ -> searchVehicle());
 
         dropdownPane.add(selectButton, 0,4,2,1);
 

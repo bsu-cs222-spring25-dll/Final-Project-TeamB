@@ -18,7 +18,7 @@ public class VehicleDatabase {
     public void importVehiclesFromCSV(String filename) throws IOException {
         try (CSVReader reader = new CSVReader(new FileReader(filename))) {
 
-            String[] headers = reader.readNext();
+            reader.readNext();
 
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
