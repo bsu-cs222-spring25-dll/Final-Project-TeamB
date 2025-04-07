@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import java.io.IOException;
 
 public class MainView extends BorderPane {
     private final FuelComparisonController controller;
@@ -27,7 +26,7 @@ public class MainView extends BorderPane {
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
 
-    public MainView(FuelComparisonController controller) throws IOException {
+    public MainView(FuelComparisonController controller) throws Exception {
         this.controller = controller;
 
         String csvFilePath = "src/main/resources/vehicles.csv";

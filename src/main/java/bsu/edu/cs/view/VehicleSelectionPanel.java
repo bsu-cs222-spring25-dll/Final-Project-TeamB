@@ -9,9 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-
-
 public class VehicleSelectionPanel extends VBox {
 
     private final ComboBox<String> yearCombo;
@@ -23,7 +20,7 @@ public class VehicleSelectionPanel extends VBox {
     private final FuelEconomyService fuelEconomyService;
     private Vehicle selectedVehicle;
 
-    public VehicleSelectionPanel(String title, String csvFilePath) throws IOException {
+    public VehicleSelectionPanel(String title, String csvFilePath) throws Exception {
         super(10);
         this.setPadding(new Insets(10));
 

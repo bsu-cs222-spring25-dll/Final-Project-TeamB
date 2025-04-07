@@ -1,8 +1,8 @@
 package bsu.edu.cs.model;
 
 import com.opencsv.CSVReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,29 +10,20 @@ import java.util.Objects;
 public class VehicleDatabase {
     private final List<Vehicle> vehicles;
 
-    public VehicleDatabase(String csvFilePath) throws IOException {
-        vehicles = new ArrayList<>();
-        importVehiclesFromCSV(csvFilePath);
+    public VehicleDatabase(String csvFilePath) throws Exception {
+        this.vehicles = importVehiclesFromCSV(csvFilePath);
     }
 
-    public void importVehiclesFromCSV(String filename) throws IOException {
-        try (CSVReader reader = new CSVReader(new FileReader(filename))) {
-
-            reader.readNext();
-
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                try {
-                    Vehicle vehicle = getVehicle(nextLine);
-                    vehicles.add(vehicle);
-                } catch (Exception e) {
-                    System.out.println("Error parsing vehicle row: " + e.getMessage());
-                }
-            }
+    private List<Vehicle> importVehiclesFromCSV(String filename) throws Exception {
+        try (CSVReader reader = new CSVReader(Files.newBufferedReader(Path.of(filename)))) {
+            reader.skip(1);
+            return reader.readAll().stream()
+                    .map(this::createVehicleFromCSV)
+                    .toList();
         }
     }
 
-    private Vehicle getVehicle(String[] nextLine) {
+    private Vehicle createVehicleFromCSV(String[] nextLine) {
         String make = nextLine[46];
         String model = nextLine[65];
         String trim = nextLine[47];

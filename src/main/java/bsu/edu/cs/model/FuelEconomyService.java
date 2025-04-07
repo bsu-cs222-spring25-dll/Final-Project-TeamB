@@ -1,6 +1,5 @@
 package bsu.edu.cs.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -8,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 public class FuelEconomyService {
     private final VehicleDatabase vehicleDatabase;
 
-    public FuelEconomyService(String csvFilePath) throws IOException {
+    public FuelEconomyService(String csvFilePath) throws Exception {
         this.vehicleDatabase = new VehicleDatabase(csvFilePath);
     }
 
