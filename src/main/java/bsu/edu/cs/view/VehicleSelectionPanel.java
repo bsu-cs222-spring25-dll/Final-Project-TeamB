@@ -20,14 +20,13 @@ public class VehicleSelectionPanel extends VBox {
     private final ComboBox<String> trimCombo;
     private final TextArea resultArea;
     private final Button selectButton;
-
     private final FuelEconomyService fuelEconomyService;
     private Vehicle selectedVehicle;
 
     public VehicleSelectionPanel(String title, String csvFilePath) throws IOException {
         super(10);
         this.setPadding(new Insets(10));
-        
+
         this.getStyleClass().add("vehicle-panel");
 
         fuelEconomyService = new FuelEconomyService(csvFilePath);
@@ -73,10 +72,8 @@ public class VehicleSelectionPanel extends VBox {
         Label label = new Label(labelText);
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setMaxWidth(Double.MAX_VALUE);
-
         gridPane.add(label,0,row);
         gridPane.add(comboBox,1,row);
-
         return comboBox;
     }
 
@@ -85,7 +82,6 @@ public class VehicleSelectionPanel extends VBox {
                 .thenAcceptAsync(years -> Platform.runLater(() ->{
                     yearCombo.getItems().clear();
                     yearCombo.getItems().addAll(years);
-
 
                 }), Platform::runLater).exceptionally(this::handleError);
     }
@@ -177,22 +173,35 @@ public class VehicleSelectionPanel extends VBox {
 
     private void displayVehicleDetails(Vehicle vehicle) {
         String details;
-        if (vehicle.getFuelType() != null){
-            details = "Vehicle Details:\n" +
-                    "Vehicle Type: " + String.format("%s", vehicle.getFuelType()) + "\n" +
-                    "City MPGe: " + String.format("%.1f", vehicle.getCityMpg()) + "\n" +
-                    "Highway MPGe: " + String.format("%.1f", vehicle.getHighwayMpg()) + "\n" +
-                    "Combined MPGe: " + String.format("%.1f", vehicle.getCombinedMpg()) + "\n" +
-                    "Combined kWh/100mi: " + String.format("%.1f", vehicle.getCombinedMpge()) + "\n";
-        }else {
-            details = "Vehicle Details:\n" +
-                    "Vehicle Type: " + "Gasoline" + "\n" +
-                    "City MPG: " + String.format("%.1f", vehicle.getCityMpg()) + "\n" +
-                    "Highway MPG: " + String.format("%.1f", vehicle.getHighwayMpg()) + "\n" +
-                    "Combined MPG: " + String.format("%.1f", vehicle.getCombinedMpg()) + "\n";
+        if (vehicle.getFuelType() != null && vehicle.getFuelType().equals("Electricity")) {
+            details = String.format(
+                    """
+                            Vehicle Details:
+                            Vehicle Type: %s
+                            City MPGe: %.1f
+                            Highway MPGe: %.1f
+                            Combined MPGe: %.1f
+                            Combined kWh/100mi: %.1f""",
+                    vehicle.getFuelType(),
+                    vehicle.getCityMpg(),
+                    vehicle.getHighwayMpg(),
+                    vehicle.getCombinedMpg(),
+                    vehicle.getCombinedMpge()
+            );
+        } else {
+            details = String.format(
+                    """
+                            Vehicle Details:
+                            Vehicle Type: Gasoline
+                            City MPG: %.1f
+                            Highway MPG: %.1f
+                            Combined MPG: %.1f""",
+                    vehicle.getCityMpg(),
+                    vehicle.getHighwayMpg(),
+                    vehicle.getCombinedMpg()
+            );
         }
         resultArea.setText(details);
-
     }
 
     private Void handleError(Throwable throwable) {

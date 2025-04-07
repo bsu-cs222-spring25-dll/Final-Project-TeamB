@@ -1,6 +1,7 @@
 package bsu.edu.cs.view;
 
-import bsu.edu.cs.model.FuelCalculator;
+import bsu.edu.cs.controller.FuelComparisonController;
+import bsu.edu.cs.model.ComparisonResult;
 import bsu.edu.cs.model.Vehicle;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,23 +14,21 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 public class MainView extends BorderPane {
-
+    private final FuelComparisonController controller;
     private Vehicle vehicle1;
     private Vehicle vehicle2;
-    private final FuelCalculator calculator;
     private TextField mpg1Field;
     private TextField mpg2Field;
     private TextField gasPriceField;
     private TextField milesField;
     private TextField timeField;
     private TextField electricField;
-
     private final VehicleSelectionPanel leftPanel;
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
 
-    public MainView() throws IOException {
-        calculator = new FuelCalculator();
+    public MainView(FuelComparisonController controller) throws IOException {
+        this.controller = controller;
 
         String csvFilePath = "src/main/resources/vehicles.csv";
 
@@ -42,7 +41,6 @@ public class MainView extends BorderPane {
         middleSection.getChildren().addAll(leftPanel, rightPanel);
 
         resultView = new ComparisonResultView();
-
         GridPane directMpgPanel = createDirectMpgPanel();
 
         Button calculateButton = new Button("Compare Vehicles");
@@ -63,31 +61,29 @@ public class MainView extends BorderPane {
         topSection.getStyleClass().add("top-section");
 
         Label gasPriceLabel = new Label("Gas Price ($):");
-        gasPriceField = new TextField(String.valueOf(calculator.getAnnualGasPrice()));
+        gasPriceField = new TextField(String.valueOf(3.50));
         gasPriceField.setPrefWidth(80);
 
         Label milesLabel = new Label("Annual Miles:");
-        milesField = new TextField(String.valueOf(calculator.getAnnualMiles()));
+        milesField = new TextField(String.valueOf(15000));
         milesField.setPrefWidth(100);
 
         Label timeLabel = new Label("Estimated Length of Ownership: ");
-        timeField = new TextField(String.valueOf(calculator.getYearsOwned()));
+        timeField = new TextField(String.valueOf(5));
         timeField.setPrefWidth(80);
 
         Label electricityLabel = new Label("Electricity: ($/kwh)");
-        electricField = new TextField(String.valueOf(calculator.getElectricityPricePerKWH()));
+        electricField = new TextField(String.valueOf(0.13));
         electricField.setPrefWidth(80);
 
         Button recalculateButton = new Button("Recalculate");
         recalculateButton.setOnAction(_ -> recalculateCheck());
 
         topSection.getChildren().addAll(gasPriceLabel, gasPriceField,
-                milesLabel,milesField,
+                milesLabel, milesField,
                 timeLabel, timeField,
                 electricityLabel, electricField,
                 recalculateButton);
-
-
         return topSection;
     }
 
@@ -100,7 +96,6 @@ public class MainView extends BorderPane {
 
         Label directInputLabel = new Label("Or directly compare MPG values: ");
         directInputLabel.setStyle("-fx-font-weight: bold;");
-        directInputLabel .getStyleClass().add("mpg-input-panel");
 
         panel.add(directInputLabel, 0, 0, 2, 1);
 
@@ -121,20 +116,18 @@ public class MainView extends BorderPane {
 
         return panel;
     }
+
     private void compareVehicles() {
         boolean usingDirectMpg = !mpg1Field.getText().trim().isEmpty() && !mpg2Field.getText().trim().isEmpty();
 
         if (usingDirectMpg) {
-
             try {
                 double mpg1 = Double.parseDouble(mpg1Field.getText().trim());
                 double mpg2 = Double.parseDouble(mpg2Field.getText().trim());
 
-                int currentYear = 2025;
-                vehicle1 = new Vehicle("Vehicle","1", mpg1, currentYear);
-                vehicle2 = new Vehicle("Vehicle","2", mpg2, currentYear);
-
-                performComparison();
+                vehicle1 = controller.createVehicleFromMpg(mpg1, "1");
+                vehicle2 = controller.createVehicleFromMpg(mpg2, "2");
+                updateResults();
             } catch (NumberFormatException e) {
                 resultView.showError("Please enter valid MPG values");
             }
@@ -143,23 +136,16 @@ public class MainView extends BorderPane {
             vehicle2 = rightPanel.getSelectedVehicle();
 
             if (vehicle1 != null && vehicle2 != null) {
-                performComparison();
+                updateResults();
             } else {
                 resultView.showError("Please select two vehicles to compare or enter MPG values directly");
             }
         }
     }
 
-    private void performComparison() {
-        double annualCost1 = calculator.calculateAnnualFuelCost(vehicle1);
-        double annualCost2 = calculator.calculateAnnualFuelCost(vehicle2);
-        double yearCost1 = calculator.calculateYearsOwnedFuelCost(vehicle1);
-        double yearCost2 = calculator.calculateYearsOwnedFuelCost(vehicle2);
-        double savings = calculator.calculateOneYearSavings(vehicle1, vehicle2);
-        double yearSavings = calculator.calculateYearSavings(vehicle1, vehicle2);
-        String moreEfficient = calculator.getMoreEfficientVehicle(vehicle1, vehicle2);
-
-        resultView.updateResults(vehicle1, vehicle2, annualCost1, annualCost2, yearCost1,yearCost2, savings, calculator.getYearsOwned(), yearSavings, moreEfficient);
+    private void updateResults() {
+        ComparisonResult result = controller.compareVehicles(vehicle1, vehicle2);
+        resultView.updateResults(result);
     }
 
     private void recalculateCheck() {
@@ -174,16 +160,11 @@ public class MainView extends BorderPane {
                 return;
             }
 
-            calculator.setAnnualGasPrice(gasPrice);
-            calculator.setAnnualMiles(miles);
-            calculator.setYearsOwned(years);
-            calculator.setElectricityPricePerKWH(electricPrice);
-
+            controller.updateCalculatorSettings(gasPrice, miles, years, electricPrice);
             resultView.showSuccess("Values updated successfully!");
 
         } catch (NumberFormatException e) {
             resultView.showError("Please enter valid numbers!");
         }
-
     }
 }

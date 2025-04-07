@@ -16,12 +16,7 @@ dependencies {
     implementation 'org.openjfx:javafx-fxml:17.0.2'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation('com.opencsv:opencsv:4.2')
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
-
-    implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'org.json:json:20231013'
+    implementation 'com.opencsv:opencsv:4.2'
 }
 
 test {

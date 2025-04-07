@@ -18,32 +18,33 @@ public class FuelCalculator {
     public Double getAnnualGasPrice() {
         return annualGasPrice;
     }
-
     public void setAnnualGasPrice(double annualGasPrice) {
         this.annualGasPrice = annualGasPrice;
-    }
-
-    public Integer getAnnualMiles() {
-        return annualMiles;
     }
 
     public void setAnnualMiles(int annualMiles) {
         this.annualMiles = annualMiles;
     }
 
-    public int getYearsOwned() {
-        return yearsOwned;
-    }
-
     public void setYearsOwned(int yearsOwned) {
         this.yearsOwned = yearsOwned;
     }
 
-    public double getElectricityPricePerKWH(){ return electricityPricePerKWH;}
-
     public void setElectricityPricePerKWH(double electricityPricePerKWH){ this.electricityPricePerKWH = electricityPricePerKWH;}
 
+    public ComparisonResult compareVehicles(Vehicle vehicle1, Vehicle vehicle2) {
+        double annualCost1 = calculateAnnualFuelCost(vehicle1);
+        double annualCost2 = calculateAnnualFuelCost(vehicle2);
+        double yearCost1 = calculateYearsOwnedFuelCost(vehicle1);
+        double yearCost2 = calculateYearsOwnedFuelCost(vehicle2);
+        double annualSavings = calculateOneYearSavings(vehicle1, vehicle2);
+        double yearsSavings = calculateYearSavings(vehicle1, vehicle2);
+        String moreEfficient = getMoreEfficientVehicle(vehicle1, vehicle2);
 
+        return new ComparisonResult(vehicle1, vehicle2, annualCost1, annualCost2,
+                yearCost1, yearCost2, annualSavings, yearsOwned, yearsSavings,
+                moreEfficient);
+    }
     public double calculateAnnualFuelCost(Vehicle vehicle){
         if (vehicle.getFuelType() != null){
             double kwhPerMile = kwhPerGallonEquivalent/vehicle.getCombinedMpg();

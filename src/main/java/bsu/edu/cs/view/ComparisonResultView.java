@@ -1,5 +1,5 @@
 package bsu.edu.cs.view;
-import bsu.edu.cs.model.Vehicle;
+import bsu.edu.cs.model.ComparisonResult;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
@@ -54,51 +54,69 @@ public class ComparisonResultView extends VBox {
         efficientVehicleLabel.getStyleClass().add("comparison-label");
         costChart.getStyleClass().add("chart");
 
-        this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel, yearSavingsLabel,efficientVehicleLabel,costChart);
+        this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,efficientVehicleLabel,costChart);
 
     }
 
-    public void updateResults(Vehicle vehicle1, Vehicle vehicle2,
-                              double annualCost1, double annualCost2, double yearCost1, double yearCost2,
-                              double annualSavings, int yearsOwned, double yearSavings,
-                              String moreEfficientVehicle) {
+    public void updateResults(ComparisonResult result) {
         annualCostsLabel.getStyleClass().add("comparison-label");
-
         annualCostsLabel.setText(String.format("Annual Fuel Costs: %s: $%.2f | %s: $%.2f",
-                vehicle1.getMake() + " " + vehicle1.getModel(), annualCost1,
-                vehicle2.getMake() + " " + vehicle2.getModel(), annualCost2));
-        yearCostLabel.setText(String.format(yearsOwned + " Year Fuel Costs: %s: $%.2f | %s: $%.2f",
-                vehicle1.getMake() + " " + vehicle1.getModel(), yearCost1,
-                vehicle2.getMake() + " " + vehicle2.getModel(), yearCost2));
-        savingsLabel.setText(String.format("Annual Savings: $%.2f", annualSavings));
-        yearSavingsLabel.setText(String.format(yearsOwned + " year Savings: $%.2f", yearSavings));
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.annualCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.annualCost2()));
 
-        String efficientText = "More Efficient Vehicle: " + moreEfficientVehicle;
-        efficientVehicleLabel.setText(efficientText);
+        yearCostLabel.setText(String.format("%d Year Fuel Costs: %s: $%.2f | %s: $%.2f",
+                result.yearsOwned(),
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.yearCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.yearCost2()));
 
+        savingsLabel.setText(String.format("Annual Savings: $%.2f", result.annualSavings()));
+        yearSavingsLabel.setText(String.format("%d year Savings: $%.2f",
+                result.yearsOwned(), result.yearsSavings()));
+        efficientVehicleLabel.setText("More Efficient Vehicle: " +
+                result.moreEfficientVehicle());
+
+        updateChart(result);
+    }
+
+    private void updateChart(ComparisonResult result) {
         costChart.getData().clear();
-
-        double roundedAnnualCost1 = Math.round(annualCost1 * 5) / 5.00;
-        double roundedAnnualCost2 = Math.round(annualCost2 * 5) / 5.00;
-
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>(vehicle1.getMake() + " " + vehicle1.getModel() + " $" + roundedAnnualCost1 + " ", annualCost1));
 
-        series.getData().add(new XYChart.Data<>(vehicle2.getMake() + " " + vehicle2.getModel() + " $" + roundedAnnualCost2, annualCost2));
+        XYChart.Data<String, Number> data1 = new XYChart.Data<>(
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel() +
+                        " $" + Math.round(result.annualCost1() * 100) / 100.0,
+                result.annualCost1());
+        series.getData().add(data1);
+
+        XYChart.Data<String, Number> data2 = new XYChart.Data<>(
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel() +
+                        " $" + Math.round(result.annualCost2() * 100) / 100.0,
+                result.annualCost2());
+        series.getData().add(data2);
 
         costChart.getData().add(series);
-        Node node = series.getData().getFirst().getNode();
-        node.getStyleClass().add("chart-bar");
-        if (moreEfficientVehicle.contains(vehicle1.getMake() + " " + vehicle1.getModel())) {
-            node.getStyleClass().add("efficient");
+
+        String efficientVehicle = result.moreEfficientVehicle();
+
+        String vehicle1Name = result.vehicle1().getMake() + " " + result.vehicle1().getModel();
+        Node node1 = data1.getNode();
+        node1.getStyleClass().add("chart-bar");
+        if (efficientVehicle.contains(vehicle1Name)) {
+            node1.getStyleClass().add("efficient");
         }
 
-        Node node2 = series.getData().get(1).getNode();
+        String vehicle2Name = result.vehicle2().getMake() + " " + result.vehicle2().getModel();
+        Node node2 = data2.getNode();
         node2.getStyleClass().add("chart-bar");
-        if (moreEfficientVehicle.contains(vehicle2.getMake() + " " + vehicle2.getModel())) {
+        if (efficientVehicle.contains(vehicle2Name)) {
             node2.getStyleClass().add("efficient");
         }
     }
+
 
     public void showError(String message){
         annualCostsLabel.setText(message);
