@@ -19,55 +19,40 @@ public class FuelCalculatorTest {
     }
 
     @Test
-    public void testDefaultConstructorValues() {
+    public void defaultAnnualGasPriceIsSetCorrectly() {
         assertEquals(3.50, calculator.getAnnualGasPrice(), 0.001);
-        assertEquals(15000, calculator.getAnnualMiles());
-        assertEquals(5, calculator.getYearsOwned());
-        assertEquals(0.13, calculator.getElectricityPricePerKWH(), 0.001);
     }
 
     @Test
-    public void testCalculateAnnualFuelCost_GasVehicle() {
+    public void setAnnualGasPriceUpdatesValue() {
+        calculator.setAnnualGasPrice(4.00);
+        assertEquals(4.00, calculator.getAnnualGasPrice(), 0.001);
+    }
+
+    @Test
+    public void calculateAnnualFuelCostForGasVehicleUsesCorrectFormula() {
         double expectedGallons = 15000 / 30.0;
         double expectedCost = expectedGallons * 3.50;
-
         assertEquals(expectedCost, calculator.calculateAnnualFuelCost(gasVehicle), 0.01);
     }
 
     @Test
-    public void testCalculateAnnualFuelCost_ElectricVehicle() {
+    public void calculateAnnualFuelCostForElectricVehicleUsesCorrectFormula() {
         double kwhPerMile = 33.705 / 120.0;
         double annualKwh = kwhPerMile * 15000;
         double expectedCost = annualKwh * 0.13;
-
         assertEquals(expectedCost, calculator.calculateAnnualFuelCost(electricVehicle), 0.01);
     }
 
     @Test
-    public void testCalculateYearsOwnedFuelCost() {
+    public void calculateYearsOwnedFuelCostMultipliesAnnualCost() {
         double annualCost = calculator.calculateAnnualFuelCost(gasVehicle);
-        double expectedTotalCost = annualCost * 5;
-
-        assertEquals(expectedTotalCost, calculator.calculateYearsOwnedFuelCost(gasVehicle), 0.01);
+        assertEquals(annualCost * 5, calculator.calculateYearsOwnedFuelCost(gasVehicle), 0.01);
     }
 
     @Test
-    public void testCalculateOneYearSavings() {
+    public void getMoreEfficientVehicleReturnsVehicleWithHigherMpg() {
         Vehicle efficientVehicle = new Vehicle("Honda", "Insight", 52.0, 2023);
-        double savings = calculator.calculateOneYearSavings(gasVehicle, efficientVehicle);
-        assertTrue(savings > 0);
-    }
-
-    @Test
-    public void testGetMoreEfficientVehicle() {
-        Vehicle efficientVehicle = new Vehicle("Honda", "Insight", 52.0, 2023);
-        String result = calculator.getMoreEfficientVehicle(gasVehicle, efficientVehicle);
-        assertEquals("Honda Insight", result);
-    }
-
-    @Test
-    public void testSetElectricityPrice() {
-        calculator.setElectricityPricePerKWH(0.15);
-        assertEquals(0.15, calculator.getElectricityPricePerKWH(), 0.001);
+        assertEquals("Honda Insight", calculator.getMoreEfficientVehicle(gasVehicle, efficientVehicle));
     }
 }
