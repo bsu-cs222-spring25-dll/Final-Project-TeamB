@@ -9,9 +9,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-
 public class ComparisonResultView extends VBox {
 
     private final Label annualCostsLabel;
@@ -27,7 +24,7 @@ public class ComparisonResultView extends VBox {
         this.getStyleClass().add("results-view");
 
         Label titleLabel = new Label("Comparison Results");
-        titleLabel.setFont(Font.font("System",FontWeight.BOLD, 16));
+        titleLabel.getStyleClass().add("panel-title");
 
         annualCostsLabel = new Label("Annual fuel costs will appear here");
         yearCostLabel = new Label("");
