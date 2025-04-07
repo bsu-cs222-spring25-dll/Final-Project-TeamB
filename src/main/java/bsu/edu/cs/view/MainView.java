@@ -124,6 +124,11 @@ public class MainView extends BorderPane {
                 double mpg1 = Double.parseDouble(mpg1Field.getText().trim());
                 double mpg2 = Double.parseDouble(mpg2Field.getText().trim());
 
+                if (mpg1 > 150 || mpg2 > 150) {
+                    resultView.showError("MPG values must be 150 or below");
+                    return;
+                }
+
                 vehicle1 = controller.createVehicleFromMpg(mpg1, "1");
                 vehicle2 = controller.createVehicleFromMpg(mpg2, "2");
                 updateResults();
