@@ -92,11 +92,10 @@
     -fx-background-radius: 8px;
     -fx-padding: 15px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
-    -fx-alignment: center;
 }
 
 .chart {
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
     -fx-padding: 15px;
     -fx-background-color: transparent;
     -fx-legend-visible: false;
@@ -104,7 +103,7 @@
 
 .chart-bar {
     -fx-bar-fill: #3498db;
-    -fx-bar-width: 30px;
+    -fx-bar-width: 15px;
 }
 
 .efficient {
@@ -123,7 +122,7 @@
     -fx-border-color: #dfe6e9;
     -fx-padding: 10px;
     -fx-font-family: monospace;
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
 }
 
 .text-area .content {

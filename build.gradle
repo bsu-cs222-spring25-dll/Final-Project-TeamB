@@ -12,14 +12,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.openjfx:javafx-controls:17.0.2'
-    implementation 'org.openjfx:javafx-fxml:17.0.2'
+    implementation ('org.openjfx:javafx-controls:21')
+    implementation ('org.openjfx:javafx-fxml:21')
     testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation ('org.junit.jupiter:junit-jupiter')
     implementation('com.opencsv:opencsv:5.7.1'){
-        exclude group: 'commons-beanutils'
+        exclude (group: 'commons-beanutils')
     }
-    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation ('commons-beanutils:commons-beanutils:1.9.4')
 }
 
 test {
