@@ -2,7 +2,6 @@ package bsu.edu.cs.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +11,7 @@ public class VehicleDatabaseTest {
     private VehicleDatabase database;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         database = new VehicleDatabase("src/test/resources/test_vehicles.csv");
     }
 

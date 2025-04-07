@@ -2,7 +2,6 @@ package bsu.edu.cs.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +11,7 @@ public class FuelEconomyServicesTest {
     private FuelEconomyService service;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         service = new FuelEconomyService("src/test/resources/test_vehicles.csv");
     }
 
