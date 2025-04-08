@@ -22,10 +22,12 @@ public class FuelCalculator {
         this.annualGasPrice = annualGasPrice;
     }
 
+    public int getAnnualMiles() {return annualMiles;}
     public void setAnnualMiles(int annualMiles) {
         this.annualMiles = annualMiles;
     }
 
+    public int getYearsOwned() {return yearsOwned;}
     public void setYearsOwned(int yearsOwned) {
         this.yearsOwned = yearsOwned;
     }

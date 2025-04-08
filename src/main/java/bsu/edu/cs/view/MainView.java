@@ -42,12 +42,9 @@ public class MainView extends BorderPane {
         resultView = new ComparisonResultView();
         GridPane directMpgPanel = createDirectMpgPanel();
 
-        Button calculateButton = new Button("Compare Vehicles");
-        calculateButton.setOnAction(_ -> compareVehicles());
-
         VBox bottomSection = new VBox(10);
         bottomSection.setPadding(new Insets(10));
-        bottomSection.getChildren().addAll( directMpgPanel, calculateButton, resultView);
+        bottomSection.getChildren().addAll( directMpgPanel, resultView);
 
         this.setTop(topSection);
         this.setCenter(middleSection);
@@ -112,6 +109,9 @@ public class MainView extends BorderPane {
         panel.add(mpg1Field, 1, 1);
         panel.add(vehicle2Label, 0, 2);
         panel.add(mpg2Field, 1, 2);
+        Button calculateButton = new Button("Compare Vehicles");
+        calculateButton.setOnAction(_ -> compareVehicles());
+        panel.add(calculateButton,0,4);
 
         return panel;
     }
