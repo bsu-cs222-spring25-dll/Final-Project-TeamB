@@ -11,6 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 public class ComparisonResultView extends VBox {
 
+    private final Label dailyCostLabel;
+    private final Label weeklyCostLabel;
+    private final Label monthlyCostLabel;
     private final Label annualCostsLabel;
     private final Label yearCostLabel;
     private final Label savingsLabel;
@@ -26,6 +29,9 @@ public class ComparisonResultView extends VBox {
         Label titleLabel = new Label("Comparison Results");
         titleLabel.getStyleClass().add("panel-title");
 
+        dailyCostLabel = new Label("");
+        weeklyCostLabel = new Label("");
+        monthlyCostLabel = new Label("");
         annualCostsLabel = new Label("Annual fuel costs will appear here");
         yearCostLabel = new Label("");
         savingsLabel = new Label("");
@@ -44,17 +50,21 @@ public class ComparisonResultView extends VBox {
         costChart.setBarGap(0);
         costChart.setCategoryGap(100);
 
+        dailyCostLabel.getStyleClass().add("comparison-label");
         yearCostLabel.getStyleClass().add("comparison-label");
         savingsLabel.getStyleClass().add("comparison-label");
         yearSavingsLabel.getStyleClass().add("comparison-label");
         efficientVehicleLabel.getStyleClass().add("comparison-label");
         costChart.getStyleClass().add("chart");
 
-        this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,efficientVehicleLabel,costChart);
+        this.getChildren().addAll(titleLabel,dailyCostLabel,weeklyCostLabel,monthlyCostLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,efficientVehicleLabel,costChart);
 
     }
 
     public void updateResults(ComparisonResult result) {
+        dailyCostLabel.setText(String.format("Daily Fuel Cost: "));
+        weeklyCostLabel.setText(String.format("Weekly Fuel Cost: "));
+        monthlyCostLabel.setText(String.format("Monthly Cost: "));
         annualCostsLabel.getStyleClass().add("comparison-label");
         annualCostsLabel.setText(String.format("Annual Fuel Costs: %s: $%.2f | %s: $%.2f",
                 result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
@@ -68,7 +78,6 @@ public class ComparisonResultView extends VBox {
                 result.yearCost1(),
                 result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
                 result.yearCost2()));
-
         savingsLabel.setText(String.format("Annual Savings: $%.2f", result.annualSavings()));
         yearSavingsLabel.setText(String.format("%d year Savings: $%.2f",
                 result.yearsOwned(), result.yearsSavings()));
@@ -118,6 +127,9 @@ public class ComparisonResultView extends VBox {
         annualCostsLabel.setText(message);
         annualCostsLabel.setTextFill(Color.RED);
 
+        dailyCostLabel.setText("");
+        weeklyCostLabel.setText("");
+        monthlyCostLabel.setText("");
         savingsLabel.setText("");
         yearCostLabel.setText("");
         yearSavingsLabel.setText("");
@@ -128,6 +140,9 @@ public class ComparisonResultView extends VBox {
         annualCostsLabel.setText(message);
         annualCostsLabel.setTextFill(Color.GREEN);
 
+        dailyCostLabel.setText("");
+        weeklyCostLabel.setText("");
+        monthlyCostLabel.setText("");
         savingsLabel.setText("");
         yearCostLabel.setText("");
         yearSavingsLabel.setText("");
