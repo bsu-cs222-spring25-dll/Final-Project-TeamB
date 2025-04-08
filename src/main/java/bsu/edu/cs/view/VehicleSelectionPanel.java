@@ -1,6 +1,5 @@
 package bsu.edu.cs.view;
 
-
 import bsu.edu.cs.model.FuelEconomyService;
 import bsu.edu.cs.model.Vehicle;
 import javafx.application.Platform;

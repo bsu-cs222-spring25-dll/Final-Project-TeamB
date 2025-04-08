@@ -65,7 +65,7 @@ public class MainView extends BorderPane {
 
         Label milesLabel = new Label("Annual Miles:");
         milesField = new TextField(String.valueOf(15000));
-        milesField.setPrefWidth(100);
+        milesField.setPrefWidth(80);
 
         Label timeLabel = new Label("Estimated Length of Ownership: ");
         timeField = new TextField(String.valueOf(5));

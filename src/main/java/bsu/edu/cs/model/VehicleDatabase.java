@@ -52,8 +52,7 @@ public class VehicleDatabase {
             boolean modelMatch = model == null || model.isEmpty() ||
                     vehicle.getModel().equalsIgnoreCase(model);
             boolean trimMatch = trim == null || trim.isEmpty() ||
-                    (vehicle.getTrim() != null &&
-                            vehicle.getTrim().equalsIgnoreCase(trim));
+                    (vehicle.getTrim() != null && vehicle.getTrim().equalsIgnoreCase(trim));
 
             if (yearMatch && makeMatch && modelMatch && trimMatch) {
                 results.add(vehicle);
