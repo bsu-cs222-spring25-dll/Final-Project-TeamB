@@ -4,8 +4,10 @@ import bsu.edu.cs.model.FuelEconomyService;
 import bsu.edu.cs.model.Vehicle;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class VehicleSelectionPanel extends VBox {
@@ -21,8 +23,8 @@ public class VehicleSelectionPanel extends VBox {
 
     public VehicleSelectionPanel(String title, String csvFilePath) throws Exception {
         super(10);
-        this.setPadding(new Insets(10));
-
+        this.setPadding(new Insets(15));
+        this.setAlignment(Pos.CENTER);
         this.getStyleClass().add("vehicle-panel");
 
         fuelEconomyService = new FuelEconomyService(csvFilePath);
@@ -53,11 +55,16 @@ public class VehicleSelectionPanel extends VBox {
         selectButton.setOnAction(_ -> searchVehicle());
 
         dropdownPane.add(selectButton, 0,4,2,1);
+        dropdownPane.setAlignment(Pos.CENTER);
 
         resultArea = new TextArea();
         resultArea.setEditable(false);
         resultArea.setPrefWidth(150);
+        resultArea.setWrapText(true);
         dropdownPane.add(resultArea, 0,5,2,1);
+
+        VBox.setVgrow(resultArea, Priority.ALWAYS);
+        resultArea.setMaxHeight(Double.MAX_VALUE);
 
         populateYears();
 
@@ -172,12 +179,11 @@ public class VehicleSelectionPanel extends VBox {
         if (vehicle.getFuelType() != null && vehicle.getFuelType().equals("Electricity")) {
             details = String.format(
                     """
-                            Vehicle Details:
-                            Vehicle Type: %s
-                            City MPGe: %.1f
-                            Highway MPGe: %.1f
-                            Combined MPGe: %.1f
-                            Combined kWh/100mi: %.1f""",
+                            Type: %s
+                            City: %.1f MPGe
+                            Hwy: %.1f MPGe
+                            Comb: %.1f MPGe
+                            kWh/100mi: %.1f""",
                     vehicle.getFuelType(),
                     vehicle.getCityMpg(),
                     vehicle.getHighwayMpg(),
@@ -187,11 +193,10 @@ public class VehicleSelectionPanel extends VBox {
         } else {
             details = String.format(
                     """
-                            Vehicle Details:
-                            Vehicle Type: Gasoline
-                            City MPG: %.1f
-                            Highway MPG: %.1f
-                            Combined MPG: %.1f""",
+                            Type: Gasoline
+                            City: %.1f MPG
+                            Hwy: %.1f MPG
+                            Comb: %.1f MPG""",
                     vehicle.getCityMpg(),
                     vehicle.getHighwayMpg(),
                     vehicle.getCombinedMpg()

@@ -4,13 +4,10 @@ import bsu.edu.cs.controller.FuelComparisonController;
 import bsu.edu.cs.model.ComparisonResult;
 import bsu.edu.cs.model.Vehicle;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.geometry.Pos;
 
 public class MainView extends BorderPane {
     private final FuelComparisonController controller;
@@ -31,56 +28,102 @@ public class MainView extends BorderPane {
 
         String csvFilePath = "src/main/resources/vehicles.csv";
 
-        HBox topSection = createTopSection();
+        this.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        VBox header = createInstructionHeader();
+        Accordion vehicleHabits = createVehicleHabits();
         leftPanel = new VehicleSelectionPanel("Vehicle 1", csvFilePath);
         rightPanel = new VehicleSelectionPanel("Vehicle 2", csvFilePath);
-
-        HBox middleSection = new HBox(20);
-        middleSection.setPadding(new Insets(10));
-        middleSection.getChildren().addAll(leftPanel, rightPanel);
-
         resultView = new ComparisonResultView();
         GridPane directMpgPanel = createDirectMpgPanel();
 
-        VBox bottomSection = new VBox(10);
-        bottomSection.setPadding(new Insets(10));
-        bottomSection.getChildren().addAll( directMpgPanel, resultView);
+        VBox centerContent = new VBox(20);
+        centerContent.setAlignment(Pos.CENTER);
+        centerContent.setPadding(new Insets(20));
 
-        this.setTop(topSection);
-        this.setCenter(middleSection);
-        this.setBottom(bottomSection);
+        HBox vehicleSelection = new HBox(40);
+        vehicleSelection.setAlignment(Pos.CENTER);
+        vehicleSelection.setMinHeight(500);
+        vehicleSelection.setPadding(new Insets(10));
+        vehicleSelection.getChildren().addAll(leftPanel, rightPanel);
+
+        centerContent.getChildren().addAll(
+                vehicleSelection,
+                directMpgPanel,
+                vehicleHabits
+        );
+
+        VBox resultSection = new VBox(10);
+        resultSection.setAlignment(Pos.CENTER);
+        resultSection.setPadding(new Insets(10));
+        resultSection.getChildren().addAll(resultView);
+
+        this.setTop(header);
+        this.setCenter(centerContent);
+        this.setBottom(resultSection);
     }
 
-    private HBox createTopSection() {
-        HBox topSection = new HBox(20);
-        topSection.setPadding(new Insets(10));
-        topSection.getStyleClass().add("top-section");
+    private VBox createInstructionHeader() {
+        VBox header = new VBox(10);
+        header.setPadding(new Insets(15));
+        header.getStyleClass().add("instruction-header");
+
+        Label title = new Label("Vehicle Fuel Economy Comparison Tool");
+        title.getStyleClass().add("header-title");
+
+        Text instructions = new Text(
+                """
+                        Learn how good fuel economy can save you money!
+                        1. Select vehicles using the dropdown menus OR enter MPG values directly
+                        2. Adjust fuel prices and driving habits as needed
+                        3. Click 'Compare Vehicles' to see cost comparisons
+                        4. Use 'Recalculate' to update calculations with new values"""
+        );
+        instructions.setWrappingWidth(600);
+
+        header.getChildren().addAll(title, instructions);
+        return header;
+
+    }
+
+    private Accordion createVehicleHabits() {
+        Accordion accordion = new Accordion();
+        accordion.setMaxWidth(Double.MAX_VALUE);
+
+        TitledPane fuelPrices = new TitledPane();
+        fuelPrices.setText("Fuel Prices and Driving Habits");
+
+        VBox vehicleHabits = new VBox(20);
+        vehicleHabits.setPadding(new Insets(10));
+        vehicleHabits.getStyleClass().add("top-section");
 
         Label gasPriceLabel = new Label("Gas Price ($):");
         gasPriceField = new TextField(String.valueOf(3.50));
-        gasPriceField.setPrefWidth(80);
+        gasPriceField.setMaxWidth(80);
 
         Label milesLabel = new Label("Annual Miles:");
         milesField = new TextField(String.valueOf(15000));
-        milesField.setPrefWidth(80);
+        milesField.setMaxWidth(80);
 
         Label timeLabel = new Label("Estimated Length of Ownership: ");
         timeField = new TextField(String.valueOf(5));
-        timeField.setPrefWidth(80);
+        timeField.setMaxWidth(80);
 
         Label electricityLabel = new Label("Electricity: ($/kwh)");
         electricField = new TextField(String.valueOf(0.13));
-        electricField.setPrefWidth(80);
+        electricField.setMaxWidth(80);
 
         Button recalculateButton = new Button("Recalculate");
         recalculateButton.setOnAction(_ -> recalculateCheck());
 
-        topSection.getChildren().addAll(gasPriceLabel, gasPriceField,
+        vehicleHabits.getChildren().addAll(gasPriceLabel, gasPriceField,
                 milesLabel, milesField,
                 timeLabel, timeField,
                 electricityLabel, electricField,
                 recalculateButton);
-        return topSection;
+        fuelPrices.setContent(vehicleHabits);
+        accordion.getPanes().addAll(fuelPrices);
+        return accordion;
     }
 
     private GridPane createDirectMpgPanel() {

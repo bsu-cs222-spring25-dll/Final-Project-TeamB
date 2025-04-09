@@ -5,8 +5,10 @@ import bsu.edu.cs.controller.FuelComparisonControllerImpl;
 import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.view.MainView;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class FuelComparisonApp extends Application {
@@ -16,14 +18,27 @@ public class FuelComparisonApp extends Application {
         FuelComparisonController controller = new FuelComparisonControllerImpl(calculator);
 
         MainView mainView = new MainView(controller);
-        ScrollPane root = new ScrollPane(mainView);
 
-        Scene scene = new Scene(root, root.getHeight(), root.getWidth());
+        ScrollPane root = new ScrollPane(mainView);
+        root.setFitToWidth(true);
+        root.setFitToHeight(true);
+        root.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        root.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        double initialHeight = screenBounds.getHeight() * 0.8;
+
+        Scene scene = new Scene(root, 800, initialHeight);
         scene.getStylesheets().add("/styles.css");
 
         primaryStage.setTitle("Vehicle Fuel Economy Comparison");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
+
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
+
+        primaryStage.setMaximized(false);
+
         primaryStage.show();
     }
 
