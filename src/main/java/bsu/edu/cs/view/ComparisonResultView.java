@@ -113,7 +113,7 @@ public class ComparisonResultView extends VBox {
 
         XYChart.Data<String, Number> data1 = new XYChart.Data<>(
                 result.vehicle1().getMake() + " " + result.vehicle1().getModel() +
-                        " $" + Math.round(result.annualCost1() * 100) / 100.0,
+                        " $" + Math.round(result.annualCost1() * 100) / 100.0 + " ",
                 result.annualCost1());
         series.getData().add(data1);
 
