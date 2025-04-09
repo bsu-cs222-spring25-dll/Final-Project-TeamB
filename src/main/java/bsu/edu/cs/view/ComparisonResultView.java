@@ -60,44 +60,45 @@ public class ComparisonResultView extends VBox {
         efficientVehicleLabel.getStyleClass().add("comparison-label");
         costChart.getStyleClass().add("chart");
 
-        this.getChildren().addAll(titleLabel,costPerMile,dailyCostLabel,weeklyCostLabel,monthlyCostLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,efficientVehicleLabel,costChart);
+        this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,monthlyCostLabel,weeklyCostLabel,dailyCostLabel,costPerMile,efficientVehicleLabel,costChart);
 
     }
 
     public void updateResults(ComparisonResult result) {
-        costPerMile.setText(String.format("Fuel Cost per Mile: %s: $%.2f | %s: $%.2f",
-                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
-                result.perMileCost1(),
-                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
-                result.perMileCost2()));
-        dailyCostLabel.setText(String.format("Daily Fuel Cost: %s: $%.2f | %s: $%.2f",
-                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
-                result.dayCost1(),
-                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
-                result.dayCost2()));
-        weeklyCostLabel.setText(String.format("Weekly Fuel Cost: %s: $%.2f | %s: $%.2f",
-                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
-                result.weekCost1(),
-                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
-                result.weekCost2()));
-        monthlyCostLabel.setText(String.format("Monthly Fuel Cost: %s: $%.2f | %s: $%.2f",
-                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
-                result.monthCost1(),
-                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
-                result.monthCost2()));
+
         annualCostsLabel.getStyleClass().add("comparison-label");
         annualCostsLabel.setText(String.format("Annual Fuel Costs: %s: $%.2f | %s: $%.2f",
                 result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
                 result.annualCost1(),
                 result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
                 result.annualCost2()));
-
         yearCostLabel.setText(String.format("%d Year Fuel Costs: %s: $%.2f | %s: $%.2f",
                 result.yearsOwned(),
                 result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
                 result.yearCost1(),
                 result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
                 result.yearCost2()));
+        monthlyCostLabel.setText(String.format("Monthly Fuel Cost: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.monthCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.monthCost2()));
+        weeklyCostLabel.setText(String.format("Weekly Fuel Cost: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.weekCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.weekCost2()));
+        dailyCostLabel.setText(String.format("Daily Fuel Cost: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.dayCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.dayCost2()));
+        costPerMile.setText(String.format("Fuel Cost per Mile: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.perMileCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.perMileCost2()));
+
         savingsLabel.setText(String.format("Annual Savings: $%.2f", result.annualSavings()));
         yearSavingsLabel.setText(String.format("%d year Savings: $%.2f",
                 result.yearsOwned(), result.yearsSavings()));

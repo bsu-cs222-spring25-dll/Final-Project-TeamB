@@ -51,9 +51,20 @@ public class FuelCalculator {
         double yearsSavings = calculateYearSavings(vehicle1, vehicle2);
         String moreEfficient = getMoreEfficientVehicle(vehicle1, vehicle2);
 
-        return new ComparisonResult(vehicle1, vehicle2, annualCost1, annualCost2,
-                yearCost1, yearCost2, monthCost1, monthCost2, weekCost1, weekCost2, dayCost1, dayCost2, perMileCost1, perMileCost2,annualSavings, yearsOwned, yearsSavings,
-                moreEfficient);
+        return new ComparisonResult(vehicle1, vehicle2,
+        annualCost1, annualCost2, yearCost1, yearCost2,
+         annualSavings,
+         yearsOwned,
+         yearsSavings,
+         moreEfficient,
+         monthCost1,
+         monthCost2,
+         weekCost1,
+         weekCost2,
+         dayCost1,
+         dayCost2,
+         perMileCost1,
+         perMileCost2);
     }
     public double calculateAnnualFuelCost(Vehicle vehicle){
         if (vehicle.getFuelType() != null){
