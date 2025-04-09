@@ -133,7 +133,7 @@ public class MainView extends BorderPane {
         panel.setPadding(new Insets(10));
         panel.getStyleClass().add("mpg-input-panel");
 
-        Label directInputLabel = new Label("Or directly compare MPG values: ");
+        Label directInputLabel = new Label("Or directly compare MPG values: (Year will default to 2023)");
         directInputLabel.setStyle("-fx-font-weight: bold;");
 
         panel.add(directInputLabel, 0, 0, 2, 1);

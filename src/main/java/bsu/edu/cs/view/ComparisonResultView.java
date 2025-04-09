@@ -22,6 +22,8 @@ public class ComparisonResultView extends VBox {
     private final Label yearSavingsLabel;
     private final Label efficientVehicleLabel;
     private final BarChart<String, Number> costChart;
+    private final Label maintenanceLabel;
+    private final Label totalCost;
 
     public ComparisonResultView(){
         super(15);
@@ -40,7 +42,9 @@ public class ComparisonResultView extends VBox {
         yearCostLabel = new Label("");
         savingsLabel = new Label("");
         yearSavingsLabel = new Label("");
+        maintenanceLabel = new Label("");
         efficientVehicleLabel = new Label("");
+        totalCost = new Label("");
 
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -61,11 +65,20 @@ public class ComparisonResultView extends VBox {
         monthlyCostLabel.getStyleClass().add("comparison-label");
         yearCostLabel.getStyleClass().add("comparison-label");
         savingsLabel.getStyleClass().add("comparison-label");
+        savingsLabel.setStyle("-fx-font-weight: bold;");
         yearSavingsLabel.getStyleClass().add("comparison-label");
+        yearSavingsLabel.setStyle("-fx-font-weight: bold;");
         efficientVehicleLabel.getStyleClass().add("comparison-label");
+        efficientVehicleLabel.setStyle("-fx-font-weight: bold;");
+        maintenanceLabel.getStyleClass().add("comparison-label");
+        maintenanceLabel.setStyle("-fx-font-weight: bold;");
+        totalCost.getStyleClass().add("comparison-label");
+        totalCost.setStyle("-fx-font-weight: bold;");
         costChart.getStyleClass().add("chart");
 
-        this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,monthlyCostLabel,weeklyCostLabel,dailyCostLabel,costPerMile,efficientVehicleLabel,costChart);
+        this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel,
+                yearSavingsLabel,monthlyCostLabel,weeklyCostLabel,dailyCostLabel,
+                costPerMile,efficientVehicleLabel,maintenanceLabel,costChart);
 
     }
 
@@ -107,6 +120,20 @@ public class ComparisonResultView extends VBox {
         savingsLabel.setText(String.format("Annual Savings: $%.2f", result.annualSavings()));
         yearSavingsLabel.setText(String.format("%d year Savings: $%.2f",
                 result.yearsOwned(), result.yearsSavings()));
+        maintenanceLabel.setText(String.format(
+                "Annual Maintenance: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.maintenanceCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.maintenanceCost2()
+        ));
+        totalCost.setText(String.format(
+                "Total Cost of %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.totalCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.totalCost2()
+        ));
         efficientVehicleLabel.setText("More Efficient Vehicle: " +
                 result.moreEfficientVehicle());
 

@@ -1,5 +1,7 @@
 package bsu.edu.cs.model;
 
+import java.time.Year;
+
 public class FuelCalculator {
     private double annualGasPrice;
     private int annualMiles;
@@ -50,21 +52,30 @@ public class FuelCalculator {
         double annualSavings = calculateOneYearSavings(vehicle1, vehicle2);
         double yearsSavings = calculateYearSavings(vehicle1, vehicle2);
         String moreEfficient = getMoreEfficientVehicle(vehicle1, vehicle2);
+        double maintenanceCost1 = calculateYearlyMaintenance(vehicle1, annualMiles);
+        double maintenanceCost2 = calculateYearlyMaintenance(vehicle2, annualMiles);
+        double totalCost1 = calculateYearlyTotalCost(vehicle1);
+        double totalCost2 = calculateYearlyTotalCost(vehicle2);
 
         return new ComparisonResult(vehicle1, vehicle2,
-        annualCost1, annualCost2, yearCost1, yearCost2,
-         annualSavings,
-         yearsOwned,
-         yearsSavings,
-         moreEfficient,
-         monthCost1,
-         monthCost2,
-         weekCost1,
-         weekCost2,
-         dayCost1,
-         dayCost2,
-         perMileCost1,
-         perMileCost2);
+                annualCost1, annualCost2,
+                yearCost1, yearCost2,
+                annualSavings,
+                yearsOwned,
+                yearsSavings,
+                moreEfficient,
+                monthCost1,
+                monthCost2,
+                weekCost1,
+                weekCost2,
+                dayCost1,
+                dayCost2,
+                perMileCost1,
+                perMileCost2,
+                maintenanceCost1,
+                maintenanceCost2,
+                totalCost1,
+                totalCost2);
     }
     public double calculateAnnualFuelCost(Vehicle vehicle){
         if (vehicle.getFuelType() != null){
@@ -102,6 +113,29 @@ public class FuelCalculator {
     public double calculateYearSavings(Vehicle vehicle1, Vehicle vehicle2){
         return calculateOneYearSavings(vehicle1,vehicle2) * yearsOwned;
     }
+
+    public double calculateYearlyMaintenance(Vehicle vehicle, int annualMiles){
+        double baseCost;
+        double mileageFactor;
+
+        if (vehicle.getFuelType() != null && vehicle.getFuelType().equals("Electricity")){
+            baseCost = 400;
+            mileageFactor = 0.03;
+        } else if (vehicle.getCombinedMpg() > 30){
+            baseCost = 550;
+            mileageFactor = 0.045;
+        } else{
+            baseCost = 650;
+            mileageFactor = 0.055;
+        }
+
+        int age = Year.now().getValue() - vehicle.getYear();
+        double ageFactor = 1.0 + (age * 0.08);
+
+        return (baseCost + (mileageFactor *annualMiles)) * ageFactor;
+    }
+
+    public double calculateYearlyTotalCost(Vehicle vehicle){return calculateYearlyMaintenance(vehicle,annualMiles);}
 
     public String getMoreEfficientVehicle(Vehicle vehicle1, Vehicle vehicle2) {
         if (vehicle1.getCombinedMpg() > vehicle2.getCombinedMpg()) {
