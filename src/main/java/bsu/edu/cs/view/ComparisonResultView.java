@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 public class ComparisonResultView extends VBox {
 
+    private final Label costPerMile;
     private final Label dailyCostLabel;
     private final Label weeklyCostLabel;
     private final Label monthlyCostLabel;
@@ -29,6 +30,7 @@ public class ComparisonResultView extends VBox {
         Label titleLabel = new Label("Comparison Results");
         titleLabel.getStyleClass().add("panel-title");
 
+        costPerMile = new Label("");
         dailyCostLabel = new Label("");
         weeklyCostLabel = new Label("");
         monthlyCostLabel = new Label("");
@@ -50,6 +52,7 @@ public class ComparisonResultView extends VBox {
         costChart.setBarGap(0);
         costChart.setCategoryGap(100);
 
+        costPerMile.getStyleClass().add("comparison-label");
         dailyCostLabel.getStyleClass().add("comparison-label");
         yearCostLabel.getStyleClass().add("comparison-label");
         savingsLabel.getStyleClass().add("comparison-label");
@@ -57,14 +60,31 @@ public class ComparisonResultView extends VBox {
         efficientVehicleLabel.getStyleClass().add("comparison-label");
         costChart.getStyleClass().add("chart");
 
-        this.getChildren().addAll(titleLabel,dailyCostLabel,weeklyCostLabel,monthlyCostLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,efficientVehicleLabel,costChart);
+        this.getChildren().addAll(titleLabel,costPerMile,dailyCostLabel,weeklyCostLabel,monthlyCostLabel,annualCostsLabel,yearCostLabel,savingsLabel,yearSavingsLabel,efficientVehicleLabel,costChart);
 
     }
 
     public void updateResults(ComparisonResult result) {
-        dailyCostLabel.setText(String.format("Daily Fuel Cost: "));
-        weeklyCostLabel.setText(String.format("Weekly Fuel Cost: "));
-        monthlyCostLabel.setText(String.format("Monthly Cost: "));
+        costPerMile.setText(String.format("Fuel Cost per Mile: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.perMileCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.perMileCost2()));
+        dailyCostLabel.setText(String.format("Daily Fuel Cost: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.dayCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.dayCost2()));
+        weeklyCostLabel.setText(String.format("Weekly Fuel Cost: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.weekCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.weekCost2()));
+        monthlyCostLabel.setText(String.format("Monthly Fuel Cost: %s: $%.2f | %s: $%.2f",
+                result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
+                result.monthCost1(),
+                result.vehicle2().getMake() + " " + result.vehicle2().getModel(),
+                result.monthCost2()));
         annualCostsLabel.getStyleClass().add("comparison-label");
         annualCostsLabel.setText(String.format("Annual Fuel Costs: %s: $%.2f | %s: $%.2f",
                 result.vehicle1().getMake() + " " + result.vehicle1().getModel(),
@@ -127,6 +147,7 @@ public class ComparisonResultView extends VBox {
         annualCostsLabel.setText(message);
         annualCostsLabel.setTextFill(Color.RED);
 
+        costPerMile.setText("");
         dailyCostLabel.setText("");
         weeklyCostLabel.setText("");
         monthlyCostLabel.setText("");
@@ -140,6 +161,7 @@ public class ComparisonResultView extends VBox {
         annualCostsLabel.setText(message);
         annualCostsLabel.setTextFill(Color.GREEN);
 
+        costPerMile.setText("");
         dailyCostLabel.setText("");
         weeklyCostLabel.setText("");
         monthlyCostLabel.setText("");

@@ -37,12 +37,20 @@ public class FuelCalculator {
         double annualCost2 = calculateAnnualFuelCost(vehicle2);
         double yearCost1 = calculateYearsOwnedFuelCost(vehicle1);
         double yearCost2 = calculateYearsOwnedFuelCost(vehicle2);
+        double monthCost1 = calculateMonthlyFuelCost(vehicle1);
+        double monthCost2 = calculateMonthlyFuelCost(vehicle2);
+        double weekCost1 = calculateWeeklyFuelCost(vehicle1);
+        double weekCost2 = calculateWeeklyFuelCost(vehicle2);
+        double dayCost1 = calculateDailyFuelCost(vehicle1);
+        double dayCost2 = calculateDailyFuelCost(vehicle2);
+        double perMileCost1 = calculateCostPerMile(vehicle1);
+        double perMileCost2 = calculateCostPerMile(vehicle2);
         double annualSavings = calculateOneYearSavings(vehicle1, vehicle2);
         double yearsSavings = calculateYearSavings(vehicle1, vehicle2);
         String moreEfficient = getMoreEfficientVehicle(vehicle1, vehicle2);
 
         return new ComparisonResult(vehicle1, vehicle2, annualCost1, annualCost2,
-                yearCost1, yearCost2, annualSavings, yearsOwned, yearsSavings,
+                yearCost1, yearCost2, monthCost1, monthCost2, weekCost1, weekCost2, dayCost1, dayCost2, perMileCost1, perMileCost2,annualSavings, yearsOwned, yearsSavings,
                 moreEfficient);
     }
     public double calculateAnnualFuelCost(Vehicle vehicle){
@@ -55,6 +63,19 @@ public class FuelCalculator {
             return gallonsUsed * annualGasPrice;
         }
     }
+    public double calculateCostPerMile(Vehicle vehicle){
+        return calculateAnnualFuelCost(vehicle) / annualMiles;
+    }
+    public double calculateMonthlyFuelCost(Vehicle vehicle){
+        return calculateAnnualFuelCost(vehicle) / 12;
+    }
+    public double calculateWeeklyFuelCost(Vehicle vehicle){
+        return calculateDailyFuelCost(vehicle) * 7;
+    }
+    public double calculateDailyFuelCost(Vehicle vehicle){
+        return calculateAnnualFuelCost(vehicle) / 365;
+    }
+
     public double calculateYearsOwnedFuelCost(Vehicle vehicle){
         return calculateAnnualFuelCost(vehicle) * yearsOwned;
     }
