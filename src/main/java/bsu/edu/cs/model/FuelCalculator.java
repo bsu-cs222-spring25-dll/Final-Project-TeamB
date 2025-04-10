@@ -21,20 +21,30 @@ public class FuelCalculator {
         return annualGasPrice;
     }
     public void setAnnualGasPrice(double annualGasPrice) {
-        this.annualGasPrice = annualGasPrice;
+        if(annualGasPrice > 0){
+            this.annualGasPrice = annualGasPrice;
+        }
     }
 
     public int getAnnualMiles() {return annualMiles;}
     public void setAnnualMiles(int annualMiles) {
-        this.annualMiles = annualMiles;
+        if (annualMiles > 0){
+            this.annualMiles = annualMiles;
+        }
     }
 
     public int getYearsOwned() {return yearsOwned;}
     public void setYearsOwned(int yearsOwned) {
-        this.yearsOwned = yearsOwned;
+        if (yearsOwned > 0) {
+            this.yearsOwned = yearsOwned;
+        }
     }
 
-    public void setElectricityPricePerKWH(double electricityPricePerKWH){ this.electricityPricePerKWH = electricityPricePerKWH;}
+    public void setElectricityPricePerKWH(double electricityPricePerKWH){
+        if (electricityPricePerKWH > 0) {
+            this.electricityPricePerKWH = electricityPricePerKWH;
+        }
+    }
 
     public ComparisonResult compareVehicles(Vehicle vehicle1, Vehicle vehicle2) {
         double annualCost1 = calculateAnnualFuelCost(vehicle1);
