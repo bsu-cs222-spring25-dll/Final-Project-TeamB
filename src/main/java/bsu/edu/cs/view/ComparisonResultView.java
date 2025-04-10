@@ -1,7 +1,6 @@
 package bsu.edu.cs.view;
 import bsu.edu.cs.model.ComparisonResult;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -28,7 +27,6 @@ public class ComparisonResultView extends VBox {
     public ComparisonResultView(){
         super(15);
         this.setPadding(new Insets(10));
-        this.setAlignment(Pos.CENTER);
         this.getStyleClass().add("results-view");
 
         Label titleLabel = new Label("Comparison Results");
@@ -57,7 +55,7 @@ public class ComparisonResultView extends VBox {
         costChart.setLegendVisible(false);
         costChart.setBarGap(0);
         costChart.setCategoryGap(100);
-        costChart.setPrefSize(400,300);
+        costChart.setMinHeight(300);
 
         costPerMile.getStyleClass().add("comparison-label");
         dailyCostLabel.getStyleClass().add("comparison-label");
@@ -77,8 +75,8 @@ public class ComparisonResultView extends VBox {
         costChart.getStyleClass().add("chart");
 
         this.getChildren().addAll(titleLabel,annualCostsLabel,yearCostLabel,savingsLabel,
-                yearSavingsLabel,monthlyCostLabel,weeklyCostLabel,dailyCostLabel,
-                costPerMile,efficientVehicleLabel,maintenanceLabel,costChart);
+                yearSavingsLabel,maintenanceLabel,totalCost,monthlyCostLabel,weeklyCostLabel,dailyCostLabel,
+                costPerMile,efficientVehicleLabel,costChart);
 
     }
 
@@ -160,7 +158,7 @@ public class ComparisonResultView extends VBox {
 
         String efficientVehicle = result.moreEfficientVehicle();
 
-        String vehicle1Name = result.vehicle1().getMake() + " " + result.vehicle1().getModel();
+        String vehicle1Name = result.vehicle1().getMake() + " " + result.vehicle1().getModel() + " ";
         Node node1 = data1.getNode();
         node1.getStyleClass().add("chart-bar");
         if (efficientVehicle.contains(vehicle1Name)) {

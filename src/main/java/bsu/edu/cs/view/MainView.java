@@ -28,8 +28,6 @@ public class MainView extends BorderPane {
 
         String csvFilePath = "src/main/resources/vehicles.csv";
 
-        this.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
         VBox header = createInstructionHeader();
         Accordion vehicleHabits = createVehicleHabits();
         leftPanel = new VehicleSelectionPanel("Vehicle 1", csvFilePath);
@@ -38,11 +36,9 @@ public class MainView extends BorderPane {
         GridPane directMpgPanel = createDirectMpgPanel();
 
         VBox centerContent = new VBox(20);
-        centerContent.setAlignment(Pos.CENTER);
         centerContent.setPadding(new Insets(20));
 
         HBox vehicleSelection = new HBox(40);
-        vehicleSelection.setAlignment(Pos.CENTER);
         vehicleSelection.setMinHeight(500);
         vehicleSelection.setPadding(new Insets(10));
         vehicleSelection.getChildren().addAll(leftPanel, rightPanel);
@@ -53,19 +49,28 @@ public class MainView extends BorderPane {
                 vehicleHabits
         );
 
-        VBox resultSection = new VBox(10);
-        resultSection.setAlignment(Pos.CENTER);
-        resultSection.setPadding(new Insets(10));
+        VBox resultSection = new VBox(40);
+        resultSection.setPadding(new Insets(20));
         resultSection.getChildren().addAll(resultView);
 
-        this.setTop(header);
-        this.setCenter(centerContent);
-        this.setBottom(resultSection);
+        VBox mainContent = new VBox(20);
+        mainContent.setAlignment(Pos.TOP_CENTER);
+        mainContent.setMaxWidth(600);
+        mainContent.setPadding(new Insets(20));
+
+        mainContent.getChildren().addAll(
+                header,
+                centerContent,
+                resultSection
+        );
+
+        this.setCenter(mainContent);
     }
 
     private VBox createInstructionHeader() {
         VBox header = new VBox(10);
-        header.setPadding(new Insets(15));
+        //header.setMaxWidth(600);
+        header.setPadding(new Insets(10));
         header.getStyleClass().add("instruction-header");
 
         Label title = new Label("Vehicle Fuel Economy Comparison Tool");
@@ -88,7 +93,7 @@ public class MainView extends BorderPane {
 
     private Accordion createVehicleHabits() {
         Accordion accordion = new Accordion();
-        accordion.setMaxWidth(Double.MAX_VALUE);
+        //accordion.setMaxWidth(600);
 
         TitledPane fuelPrices = new TitledPane();
         fuelPrices.setText("Fuel Prices and Driving Habits");

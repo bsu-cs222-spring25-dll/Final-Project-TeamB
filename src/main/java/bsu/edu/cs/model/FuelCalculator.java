@@ -135,7 +135,9 @@ public class FuelCalculator {
         return (baseCost + (mileageFactor *annualMiles)) * ageFactor;
     }
 
-    public double calculateYearlyTotalCost(Vehicle vehicle){return calculateYearlyMaintenance(vehicle,annualMiles);}
+    public double calculateYearlyTotalCost(Vehicle vehicle){
+        return calculateYearlyMaintenance(vehicle,annualMiles) + calculateAnnualFuelCost(vehicle);
+    }
 
     public String getMoreEfficientVehicle(Vehicle vehicle1, Vehicle vehicle2) {
         if (vehicle1.getCombinedMpg() > vehicle2.getCombinedMpg()) {

@@ -84,16 +84,13 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);
     -fx-min-width: 300px;
     -fx-max-width: 350px;
-    -fx-max-height: Infinity;
 }
 
 .results-view {
     -fx-background-color: white;
     -fx-background-radius: 8px;
-    -fx-padding: 20px;
+    -fx-padding: 15px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);
-    -fx-min-width: 700px;
-    -fx-spacing: 15px;
 }
 
 .top-section {

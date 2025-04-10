@@ -22,19 +22,17 @@ public class FuelComparisonApp extends Application {
         ScrollPane root = new ScrollPane(mainView);
         root.setFitToWidth(true);
         root.setFitToHeight(true);
-        root.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        root.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         double initialHeight = screenBounds.getHeight() * 0.8;
 
-        Scene scene = new Scene(root, 800, initialHeight);
+        Scene scene = new Scene(root, 840, initialHeight);
         scene.getStylesheets().add("/styles.css");
 
         primaryStage.setTitle("Vehicle Fuel Economy Comparison");
         primaryStage.setScene(scene);
 
-        primaryStage.setMinWidth(800);
+        primaryStage.setMinWidth(860);
         primaryStage.setMinHeight(600);
 
         primaryStage.setMaximized(false);
