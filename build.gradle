@@ -16,9 +16,7 @@ dependencies {
     implementation ('org.openjfx:javafx-fxml:21')
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation ('org.junit.jupiter:junit-jupiter')
-    implementation('com.opencsv:opencsv:5.7.1'){
-        exclude (group: 'commons-beanutils')
-    }
+    implementation('com.opencsv:opencsv:5.7.1')
     implementation ('commons-beanutils:commons-beanutils:1.9.4')
 }
 

@@ -1,4 +1,5 @@
 package bsu.edu.cs.view;
+
 import bsu.edu.cs.model.ComparisonResult;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -9,6 +10,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
 public class ComparisonResultView extends VBox {
 
     private final Label costPerMile;
@@ -144,13 +146,13 @@ public class ComparisonResultView extends VBox {
 
         XYChart.Data<String, Number> data1 = new XYChart.Data<>(
                 result.vehicle1().getMake() + " " + result.vehicle1().getModel() +
-                        " $" + Math.round(result.annualCost1() * 100) / 100.0 + " ",
+                        " $" +  String.format("%.2f" ,result.annualCost1()),
                 result.annualCost1());
         series.getData().add(data1);
 
         XYChart.Data<String, Number> data2 = new XYChart.Data<>(
                 result.vehicle2().getMake() + " " + result.vehicle2().getModel() +
-                        " $" + Math.round(result.annualCost2() * 100) / 100.0,
+                        " $" + String.format("%.2f" ,result.annualCost1()),
                 result.annualCost2());
         series.getData().add(data2);
 
@@ -173,7 +175,6 @@ public class ComparisonResultView extends VBox {
         }
     }
 
-
     public void showError(String message){
         annualCostsLabel.setText(message);
         annualCostsLabel.setTextFill(Color.RED);
@@ -185,6 +186,8 @@ public class ComparisonResultView extends VBox {
         savingsLabel.setText("");
         yearCostLabel.setText("");
         yearSavingsLabel.setText("");
+        maintenanceLabel.setText("");
+        totalCost.setText("");
         costChart.getData().clear();
         efficientVehicleLabel.setText("");
     }
@@ -199,6 +202,8 @@ public class ComparisonResultView extends VBox {
         savingsLabel.setText("");
         yearCostLabel.setText("");
         yearSavingsLabel.setText("");
+        maintenanceLabel.setText("");
+        totalCost.setText("");
         costChart.getData().clear();
         efficientVehicleLabel.setText("");
     }
