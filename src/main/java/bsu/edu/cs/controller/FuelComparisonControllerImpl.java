@@ -2,16 +2,45 @@ package bsu.edu.cs.controller;
 
 import bsu.edu.cs.model.ComparisonResult;
 import bsu.edu.cs.model.FuelCalculator;
+import bsu.edu.cs.model.FuelEconomyService;
 import bsu.edu.cs.model.Vehicle;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class FuelComparisonControllerImpl implements FuelComparisonController {
     private final FuelCalculator calculator;
+    private final FuelEconomyService fuelEconomyService;
     private static final double MAX_MPG = 150.0;
 
-    public FuelComparisonControllerImpl(FuelCalculator calculator) {
+    public FuelComparisonControllerImpl(FuelCalculator calculator, FuelEconomyService fuelEconomyService) {
         this.calculator = calculator;
+        this.fuelEconomyService = fuelEconomyService;
     }
 
+    @Override
+    public CompletableFuture<List<String>> getYears() {
+        return fuelEconomyService.getYears();
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getMakes(String year) {
+        return fuelEconomyService.getMakes(year);
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getModels(String year, String make) {
+        return fuelEconomyService.getModels(year, make);
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getTrims(String year, String make, String model) {
+        return fuelEconomyService.getTrims(year, make, model);
+    }
+
+    @Override
+    public CompletableFuture<Vehicle> searchVehicle(String year, String make, String model, String trim) {
+        return fuelEconomyService.searchVehicles(year, make, model, trim);
+    }
     @Override
     public ComparisonResult compareVehicles(Vehicle vehicle1, Vehicle vehicle2) {
         if (vehicle1 == null || vehicle2 == null) {

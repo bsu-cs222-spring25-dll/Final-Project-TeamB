@@ -13,9 +13,10 @@ public class FuelComparisonControllerTest {
     private final Vehicle vehicle2 = new Vehicle("Honda", "Accord", 28.0, 2023);
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         calculator = new FuelCalculator();
-        controller = new FuelComparisonControllerImpl(calculator);
+        FuelEconomyService fuelEconomyService = new FuelEconomyService("src/main/resources/vehicles.csv");
+        controller = new FuelComparisonControllerImpl(calculator, fuelEconomyService);
     }
 
     @Test
@@ -81,7 +82,7 @@ public class FuelComparisonControllerTest {
     @Test
     public void createVehicleFromMpgSetsCorrectMake() {
         Vehicle vehicle = controller.createVehicleFromMpg(35.0, "Test Vehicle");
-        assertEquals("Vehicle", vehicle.getMake());
+        assertEquals("Custom Vehicle", vehicle.getMake());
     }
 
     @Test

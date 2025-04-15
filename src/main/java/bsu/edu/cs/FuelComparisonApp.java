@@ -3,6 +3,7 @@ package bsu.edu.cs;
 import bsu.edu.cs.controller.FuelComparisonController;
 import bsu.edu.cs.controller.FuelComparisonControllerImpl;
 import bsu.edu.cs.model.FuelCalculator;
+import bsu.edu.cs.model.FuelEconomyService;
 import bsu.edu.cs.view.MainView;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -15,7 +16,9 @@ public class FuelComparisonApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FuelCalculator calculator = new FuelCalculator();
-        FuelComparisonController controller = new FuelComparisonControllerImpl(calculator);
+        FuelEconomyService fuelEconomyService = new FuelEconomyService(
+                "src/main/resources/vehicles.csv");
+        FuelComparisonController controller = new FuelComparisonControllerImpl(calculator, fuelEconomyService);
 
         MainView mainView = new MainView(controller);
 

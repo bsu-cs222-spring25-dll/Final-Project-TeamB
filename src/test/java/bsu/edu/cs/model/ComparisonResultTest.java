@@ -17,7 +17,7 @@ public class ComparisonResultTest {
             70.83, 100.0,
             16.35, 23.08,
             2.33, 3.29,
-            0.057, 0.080
+            0.057, 0.080,800.00,800.00, 1650.00,2000.00
     );
 
     @Test void vehicle1FieldIsCorrect() { assertEquals(vehicle1, result.vehicle1()); }
@@ -38,4 +38,8 @@ public class ComparisonResultTest {
     @Test void dayCost2FieldIsCorrect() { assertEquals(3.29, result.dayCost2(), 0.01); }
     @Test void perMileCost1FieldIsCorrect() { assertEquals(0.057, result.perMileCost1(), 0.001); }
     @Test void perMileCost2FieldIsCorrect() { assertEquals(0.080, result.perMileCost2(), 0.001); }
+    @Test void maintenanceCost1FieldIsCorrect(){ assertEquals(800, result.maintenanceCost1(), 0.001);}
+    @Test void maintenanceCost2FieldIsCorrect(){ assertEquals(800, result.maintenanceCost2(), 0.001);}
+    @Test void totalCost1FieldIsCorrect(){ assertEquals(1650.00, result.totalCost1(),0.001);}
+    @Test void totalCost2FieldIsCorrect(){ assertEquals(2000.00, result.totalCost2(), 0.001);}
 }

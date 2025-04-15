@@ -23,15 +23,13 @@ public class MainView extends BorderPane {
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
 
-    public MainView(FuelComparisonController controller) throws Exception {
+    public MainView(FuelComparisonController controller) {
         this.controller = controller;
-
-        String csvFilePath = "src/main/resources/vehicles.csv";
 
         VBox header = createInstructionHeader();
         Accordion vehicleHabits = createVehicleHabits();
-        leftPanel = new VehicleSelectionPanel("Vehicle 1", csvFilePath);
-        rightPanel = new VehicleSelectionPanel("Vehicle 2", csvFilePath);
+        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller);
+        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller);
         resultView = new ComparisonResultView();
         GridPane directMpgPanel = createDirectMpgPanel();
 
@@ -77,7 +75,7 @@ public class MainView extends BorderPane {
 
         Text instructions = new Text(
                 """
-                        Learn how good fuel economy can save you money!
+                        Learn how efficient fuel economy can save you money!
                         1. Select vehicles using the dropdown menus OR enter MPG values directly
                         2. Adjust fuel prices and driving habits as needed
                         3. Click 'Compare Vehicles' to see cost comparisons
