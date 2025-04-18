@@ -12,6 +12,9 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
     private final FuelEconomyService fuelEconomyService;
     private static final double MAX_MPG = 150.0;
 
+    private Vehicle currentVehicle1;
+    private Vehicle currentVehicle2;
+
     public FuelComparisonControllerImpl(FuelCalculator calculator, FuelEconomyService fuelEconomyService) {
         this.calculator = calculator;
         this.fuelEconomyService = fuelEconomyService;
@@ -68,6 +71,20 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
         return new Vehicle("Custom Vehicle", name, mpg, 2023);
     }
 
+    @Override
+    public void updateSettingsFromStrings(String gasPriceStr, String milesStr, String yearsStr, String electricityStr) {
+        try {
+            double gasPrice = Double.parseDouble(gasPriceStr);
+            int miles = Integer.parseInt(milesStr);
+            int years = Integer.parseInt(yearsStr);
+            double electricityPrice = Double.parseDouble(electricityStr);
+
+            updateCalculatorSettings(gasPrice, miles, years, electricityPrice);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid input values. Please enter valid numbers.");
+        }
+    }
+
     public Vehicle createVehicleFromInputs(String mpgStr, String name, Vehicle selectedVehicle) {
         if (mpgStr != null && !mpgStr.isEmpty()) {
             return createVehicleFromMpg(Double.parseDouble(mpgStr), name);
@@ -76,16 +93,37 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
         }
         throw new IllegalArgumentException("No valid vehicle input provided.");
     }
+    @Override
+    public void updateFinancialSettings(
+            double purchasePrice1, double downPayment1, double loanAmount1, double interestRate1, double loanPeriod1,
+            double purchasePrice2, double downPayment2, double loanAmount2, double interestRate2, double loanPeriod2) {
 
-    public void updateSettingsFromStrings(String gasPriceStr, String milesStr, String yearsStr, String electricityStr) {
-        try {
-            double gasPrice = gasPriceStr.isEmpty() ? 3.50 : Double.parseDouble(gasPriceStr);
-            int miles = milesStr.isEmpty() ? 15000 : Integer.parseInt(milesStr);
-            int years = yearsStr.isEmpty() ? 5 : Integer.parseInt(yearsStr);
-            double electricityPrice = electricityStr.isEmpty() ? 0.13 : Double.parseDouble(electricityStr);
-            updateCalculatorSettings(gasPrice, miles, years, electricityPrice);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid input format. Please enter valid numbers.");
+        // Update vehicle 1 financial settings
+        if (currentVehicle1 != null) {
+            updateVehicleFinancials(currentVehicle1, purchasePrice1, downPayment1, loanAmount1, interestRate1, loanPeriod1);
         }
+
+        // Update vehicle 2 financial settings
+        if (currentVehicle2 != null) {
+            updateVehicleFinancials(currentVehicle2, purchasePrice2, downPayment2, loanAmount2, interestRate2, loanPeriod2);
+        }
+
+        // Recalculate comparison results if both vehicles are available
+        if (currentVehicle1 != null && currentVehicle2 != null) {
+            compareVehicles(currentVehicle1, currentVehicle2);
+        }
+    }
+
+    /**
+     * Helper method to update financial settings for a vehicle
+     */
+    private void updateVehicleFinancials(Vehicle vehicle, double purchasePrice, double downPayment,
+                                         double loanAmount, double interestRate, double loanPeriod) {
+        // Assuming Vehicle class has these setter methods
+        vehicle.setPurchasePrice(purchasePrice);
+        vehicle.setDownPayment(downPayment);
+        vehicle.setLoanAmount(loanAmount);
+        vehicle.setInterestRate(interestRate);
+        vehicle.setLoanPeriod(loanPeriod);
     }
 }

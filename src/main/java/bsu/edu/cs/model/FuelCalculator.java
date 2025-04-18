@@ -9,6 +9,7 @@ public class FuelCalculator {
     private double electricityPricePerKWH;
     private final double kwhPerGallonEquivalent;
 
+
     public FuelCalculator() {
         this.annualGasPrice = 3.50;
         this.annualMiles = 15000;
@@ -46,6 +47,7 @@ public class FuelCalculator {
         }
     }
 
+
     public ComparisonResult compareVehicles(Vehicle vehicle1, Vehicle vehicle2) {
         double annualCost1 = calculateAnnualFuelCost(vehicle1);
         double annualCost2 = calculateAnnualFuelCost(vehicle2);
@@ -64,9 +66,8 @@ public class FuelCalculator {
         String moreEfficient = getMoreEfficientVehicle(vehicle1, vehicle2);
         double maintenanceCost1 = calculateYearlyMaintenance(vehicle1, annualMiles);
         double maintenanceCost2 = calculateYearlyMaintenance(vehicle2, annualMiles);
-        double totalCost1 = calculateYearlyTotalCost(vehicle1);
-        double totalCost2 = calculateYearlyTotalCost(vehicle2);
-
+        double totalCost1= vehicle1.calculateTotalCostOfOwnership(annualMiles,yearsOwned,annualGasPrice,electricityPricePerKWH);
+        double totalCost2= vehicle2.calculateTotalCostOfOwnership(annualMiles,yearsOwned,annualGasPrice,electricityPricePerKWH);
         return new ComparisonResult(vehicle1, vehicle2,
                 annualCost1, annualCost2,
                 yearCost1, yearCost2,
@@ -146,7 +147,8 @@ public class FuelCalculator {
     }
 
     public double calculateYearlyTotalCost(Vehicle vehicle){
-        return calculateYearlyMaintenance(vehicle,annualMiles) + calculateAnnualFuelCost(vehicle);
+        return calculateYearlyMaintenance(vehicle,annualMiles) + calculateAnnualFuelCost(vehicle) +vehicle.getPurchasePrice() +
+                vehicle.calculateTotalInterest();
     }
 
     public String getMoreEfficientVehicle(Vehicle vehicle1, Vehicle vehicle2) {
@@ -158,5 +160,6 @@ public class FuelCalculator {
             return "Both vehicles have the same efficiency";
         }
     }
+
 
 }

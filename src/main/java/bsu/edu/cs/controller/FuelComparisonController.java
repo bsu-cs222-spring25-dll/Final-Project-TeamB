@@ -12,6 +12,9 @@ public interface FuelComparisonController {
     Vehicle createVehicleFromMpg(double mpg, String name);
     void updateSettingsFromStrings(String gasPriceStr, String milesStr, String yearsStr, String electricityStr);
     Vehicle createVehicleFromInputs(String trim, String number, Vehicle selectedVehicle);
+    void updateFinancialSettings(
+            double purchasePrice1, double downPayment1, double loanAmount1, double interestRate1, double loanPeriod1,
+            double purchasePrice2, double downPayment2, double loanAmount2, double interestRate2, double loanPeriod2);
 
     CompletableFuture<List<String>> getYears();
     CompletableFuture<List<String>> getMakes(String year);
