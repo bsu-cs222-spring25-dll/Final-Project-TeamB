@@ -71,17 +71,21 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
         return new Vehicle("Custom Vehicle", name, mpg, 2023);
     }
 
-    @Override
-    public void updateSettingsFromStrings(String gasPriceStr, String milesStr, String yearsStr, String electricityStr) {
+    public void updateSettingsFromStrings(String gasPriceStr, String milesStr, String timeStr, String electricStr) {
         try {
             double gasPrice = Double.parseDouble(gasPriceStr);
             int miles = Integer.parseInt(milesStr);
-            int years = Integer.parseInt(yearsStr);
-            double electricityPrice = Double.parseDouble(electricityStr);
+            int time = Integer.parseInt(timeStr);
+            double electric = Double.parseDouble(electricStr);
 
-            updateCalculatorSettings(gasPrice, miles, years, electricityPrice);
+            if (gasPrice <= 0 || miles <= 0 || time <= 0 || electric <= 0) {
+                throw new IllegalArgumentException("All values must be positive");
+            }
+
+            calculator.updateAllParameters(gasPrice, miles, time, electric);
+
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid input values. Please enter valid numbers.");
+            throw new IllegalArgumentException("Invalid input: Please enter valid numbers");
         }
     }
 
@@ -89,6 +93,7 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
         if (mpgStr != null && !mpgStr.isEmpty()) {
             return createVehicleFromMpg(Double.parseDouble(mpgStr), name);
         } else if (selectedVehicle != null) {
+            System.out.println(selectedVehicle);
             return selectedVehicle;
         }
         throw new IllegalArgumentException("No valid vehicle input provided.");
@@ -99,11 +104,19 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
             double purchasePrice2, double downPayment2, double loanAmount2, double interestRate2, double loanPeriod2) {
 
         if (currentVehicle1 != null) {
-            updateVehicleFinancials(currentVehicle1, purchasePrice1, downPayment1, loanAmount1, interestRate1, loanPeriod1);
+            currentVehicle1.setPurchasePrice(purchasePrice1);
+            currentVehicle1.setDownPayment(downPayment1);
+            currentVehicle1.setLoanAmount(loanAmount1);
+            currentVehicle1.setInterestRate(interestRate1);
+            currentVehicle1.setLoanPeriod(loanPeriod1);
         }
 
         if (currentVehicle2 != null) {
-            updateVehicleFinancials(currentVehicle2, purchasePrice2, downPayment2, loanAmount2, interestRate2, loanPeriod2);
+            currentVehicle2.setPurchasePrice(purchasePrice2);
+            currentVehicle2.setDownPayment(downPayment2);
+            currentVehicle2.setLoanAmount(loanAmount2);
+            currentVehicle2.setInterestRate(interestRate2);
+            currentVehicle2.setLoanPeriod(loanPeriod2);
         }
 
         if (currentVehicle1 != null && currentVehicle2 != null) {
@@ -111,12 +124,8 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
         }
     }
 
-    private void updateVehicleFinancials(Vehicle vehicle, double purchasePrice, double downPayment,
-                                         double loanAmount, double interestRate, double loanPeriod) {
-        vehicle.setPurchasePrice(purchasePrice);
-        vehicle.setDownPayment(downPayment);
-        vehicle.setLoanAmount(loanAmount);
-        vehicle.setInterestRate(interestRate);
-        vehicle.setLoanPeriod(loanPeriod);
+    public void setCurrentVehicles(Vehicle vehicle1, Vehicle vehicle2) {
+        this.currentVehicle1 = vehicle1;
+        this.currentVehicle2 = vehicle2;
     }
 }

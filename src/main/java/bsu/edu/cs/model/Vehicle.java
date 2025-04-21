@@ -1,5 +1,7 @@
 package bsu.edu.cs.model;
 
+import java.time.Year;
+
 public class Vehicle {
     private final String make;
     private final String model;
@@ -30,7 +32,7 @@ public class Vehicle {
         this.fuelType = fuelType;
         this.combinedMpge = combinedMpge;
 
-        this.purchasePrice = 10000;
+        this.purchasePrice = 0.0;
         this.downPayment = 0.0;
         this.loanAmount = 0.0;
         this.interestRate = 0.0;
@@ -105,8 +107,6 @@ public class Vehicle {
 
         double monthlyRate = interestRate / 100 / 12;
         double numPayments = loanPeriod;
-        System.out.println(loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
-                (Math.pow(1 + monthlyRate, numPayments) - 1));
 
         return loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
                 (Math.pow(1 + monthlyRate, numPayments) - 1);
@@ -114,7 +114,6 @@ public class Vehicle {
     
     public double calculateTotalInterest() {
         double monthlyPayment = calculateMonthlyPayment();
-        System.out.println((monthlyPayment * loanPeriod) - loanAmount);
         return (monthlyPayment * loanPeriod) - loanAmount;
     }
 
@@ -124,7 +123,6 @@ public class Vehicle {
 
         double fuelCost;
         if ("Electricity".equalsIgnoreCase(fuelType)) {
-
             double kwhPerMile = 33.7 / combinedMpge;
             fuelCost = totalMiles * kwhPerMile * electricityPricePerKWH;
         } else {
@@ -133,14 +131,34 @@ public class Vehicle {
 
         double vehicleCost;
         if (loanAmount > 0 && loanPeriod > 0 && interestRate > 0) {
-            vehicleCost = calculateMonthlyPayment() * loanPeriod;
-            System.out.println(vehicleCost);
+            vehicleCost = downPayment + (calculateMonthlyPayment() * loanPeriod);
         } else {
             vehicleCost = purchasePrice;
-            //System.out.println(vehicleCost);
         }
 
-        return vehicleCost + fuelCost;
+        double maintenanceCost = yearsOwned * calculateYearlyMaintenanceEstimate(annualMiles);
+
+        return vehicleCost + fuelCost + maintenanceCost;
+    }
+    private double calculateYearlyMaintenanceEstimate(int annualMiles) {
+        double baseCost;
+        double mileageFactor;
+
+        if ("Electricity".equalsIgnoreCase(fuelType)) {
+            baseCost = 400;
+            mileageFactor = 0.03;
+        } else if (combinedMpg > 30) {
+            baseCost = 550;
+            mileageFactor = 0.045;
+        } else {
+            baseCost = 650;
+            mileageFactor = 0.055;
+        }
+
+        int age = Year.now().getValue() - year;
+        double ageFactor = 1.0 + (age * 0.08);
+
+        return (baseCost + (mileageFactor * annualMiles)) * ageFactor;
     }
 
     @Override

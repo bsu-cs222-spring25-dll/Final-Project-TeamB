@@ -18,6 +18,13 @@ public class FuelCalculator {
         this.kwhPerGallonEquivalent = 33.705;
     }
 
+    public void updateAllParameters(double annualGasPrice, int annualMiles, int yearsOwned, double electricityPricePerKWH) {
+        setAnnualGasPrice(annualGasPrice);
+        setAnnualMiles(annualMiles);
+        setYearsOwned(yearsOwned);
+        setElectricityPricePerKWH(electricityPricePerKWH);
+    }
+
     public Double getAnnualGasPrice() {
         return annualGasPrice;
     }
@@ -45,6 +52,9 @@ public class FuelCalculator {
         if (electricityPricePerKWH > 0) {
             this.electricityPricePerKWH = electricityPricePerKWH;
         }
+    }
+    public double getElectricityPricePerKWH() {
+        return electricityPricePerKWH;
     }
 
 
@@ -144,11 +154,6 @@ public class FuelCalculator {
         double ageFactor = 1.0 + (age * 0.08);
 
         return (baseCost + (mileageFactor *annualMiles)) * ageFactor;
-    }
-
-    public double calculateYearlyTotalCost(Vehicle vehicle){
-        return calculateYearlyMaintenance(vehicle,annualMiles) + calculateAnnualFuelCost(vehicle) +vehicle.getPurchasePrice() +
-                vehicle.calculateTotalInterest();
     }
 
     public String getMoreEfficientVehicle(Vehicle vehicle1, Vehicle vehicle2) {

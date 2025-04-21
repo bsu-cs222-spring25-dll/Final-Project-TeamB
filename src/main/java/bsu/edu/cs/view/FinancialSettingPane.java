@@ -50,7 +50,7 @@ public class FinancialSettingPane extends TitledPane {
         downPayment1.setPromptText("Enter down payment");
 
         Label loanLabel1 = new Label("Loan Amount ($):");
-        loanAmount1 = new TextField();
+        loanAmount1 = new TextField(String.valueOf(5000.00));
         loanAmount1.setEditable(false);
 
         Label interestLabel1 = new Label("Interest Rate (%):");
@@ -83,22 +83,6 @@ public class FinancialSettingPane extends TitledPane {
 
         recalculateButton = new Button("Recalculate Financials");
         recalculateButton.getStyleClass().add("financial-recalculate-button");
-
-//        ChangeListener<String> financialChangeListener = (obs, oldVal, newVal) -> {
-//            if (recalculateButton != null) {
-//                recalculateButton.setDisable(false);
-//            }
-//        };
-//
-//          Add this listener to all financial fields
-//        purchasePriceField1.textProperty().addListener(financialChangeListener);
-//        downPayment1.textProperty().addListener(financialChangeListener);
-//        interestRate1.textProperty().addListener(financialChangeListener);
-//        loanPeriod1.textProperty().addListener(financialChangeListener);
-//        purchasePriceField2.textProperty().addListener(financialChangeListener);
-//        downPayment2.textProperty().addListener(financialChangeListener);
-//        interestRate2.textProperty().addListener(financialChangeListener);
-//        loanPeriod2.textProperty().addListener(financialChangeListener);
 
         setupAutoCalculation(purchasePriceField1, downPayment1, loanAmount1);
         setupAutoCalculation(purchasePriceField2, downPayment2, loanAmount2);
@@ -140,7 +124,6 @@ public class FinancialSettingPane extends TitledPane {
             }
 
             loanField.setText(String.format("%.2f", loanAmount));
-            System.out.println(loanAmount);
         } catch (NumberFormatException e) {
             loanField.setText("");
         }
@@ -192,6 +175,7 @@ public class FinancialSettingPane extends TitledPane {
     public String getLoanPeriod2() {
         return loanPeriod2.getText();
     }
+
     public Button getRecalculateButton() {
         return recalculateButton;
     }

@@ -14,13 +14,14 @@ public class VehicleSelectionPanel extends VBox {
     private final ComboBox<String> modelCombo;
     private final ComboBox<String> trimCombo;
     private final TextArea resultArea;
-    //private final Button selectButton;
     private final FuelComparisonController controller;
     private Vehicle selectedVehicle;
+    private final Runnable onVehicleSelected;
 
-    public VehicleSelectionPanel(String title, FuelComparisonController controller) {
+    public VehicleSelectionPanel(String title, FuelComparisonController controller, Runnable onVehicleSelected) {
         super(10);
         this.controller = controller;
+        this.onVehicleSelected = onVehicleSelected;
         this.setPadding(new Insets(15));
         this.getStyleClass().add("vehicle-panel");
 
@@ -144,6 +145,9 @@ public class VehicleSelectionPanel extends VBox {
                     if (vehicle != null) {
                         selectedVehicle = vehicle;
                         displayVehicleDetails(vehicle);
+                        if (onVehicleSelected != null) {
+                            onVehicleSelected.run();
+                        }
                     }
                     trimCombo.setDisable(false);
                 }))

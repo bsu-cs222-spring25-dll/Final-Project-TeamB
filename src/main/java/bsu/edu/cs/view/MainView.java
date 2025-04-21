@@ -1,7 +1,9 @@
 package bsu.edu.cs.view;
 
 import bsu.edu.cs.controller.FuelComparisonController;
+import bsu.edu.cs.controller.FuelComparisonControllerImpl;
 import bsu.edu.cs.model.ComparisonResult;
+import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -23,17 +25,19 @@ public class MainView extends BorderPane {
     private final VehicleSelectionPanel rightPanel;
     private final ComparisonResultView resultView;
     private final FinancialSettingPane financialSettingsPane;
+    private final FuelCalculator calculator;
 
     public MainView(FuelComparisonController controller) {
         this.controller = controller;
         this.financialSettingsPane = new FinancialSettingPane();
+        this.calculator = new FuelCalculator();
         financialSettingsPane.getRecalculateButton().setOnAction(_ -> recalculateFinancials());
 
         VBox header = createInstructionHeader();
         Accordion vehicleHabits = createVehicleHabits();
-        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller);
-        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller);
-        resultView = new ComparisonResultView();
+        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller, this::onVehicleSelected);
+        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller, this::onVehicleSelected);
+        resultView = new ComparisonResultView(calculator);
         GridPane directMpgPanel = createDirectMpgPanel();
 
         VBox centerContent = new VBox(20);
@@ -177,17 +181,66 @@ public class MainView extends BorderPane {
 
         return panel;
     }
+    private void onVehicleSelected() {
+        if (leftPanel.getSelectedVehicle() != null && rightPanel.getSelectedVehicle() != null) {
+            vehicle1 = leftPanel.getSelectedVehicle();
+            vehicle2 = rightPanel.getSelectedVehicle();
+
+            if (vehicle1 != null) {
+                vehicle1.setPurchasePrice(vehicle1.getPurchasePrice());
+                vehicle1.setDownPayment(vehicle1.getDownPayment());
+                vehicle1.setInterestRate(vehicle1.getInterestRate());
+                vehicle1.setLoanPeriod(vehicle1.getLoanPeriod());
+            }
+
+            if (vehicle2 != null) {
+                vehicle2.setPurchasePrice(vehicle2.getPurchasePrice());
+                vehicle2.setDownPayment(vehicle2.getDownPayment());
+                vehicle2.setInterestRate(vehicle2.getInterestRate());
+                vehicle2.setLoanPeriod(vehicle2.getLoanPeriod());
+            }
+
+            ((FuelComparisonControllerImpl)controller).setCurrentVehicles(vehicle1, vehicle2);
+            updateResults();
+        }
+    }
 
     private void compareVehicles() {
         try {
+            double purchasePrice1 = vehicle1 != null ? vehicle1.getPurchasePrice() : 10000;
+            double downPayment1 = vehicle1 != null ? vehicle1.getDownPayment() : 0;
+            double interestRate1 = vehicle1 != null ? vehicle1.getInterestRate() : 0;
+            double loanPeriod1 = vehicle1 != null ? vehicle1.getLoanPeriod() : 0;
+
+            double purchasePrice2 = vehicle2 != null ? vehicle2.getPurchasePrice() : 10000;
+            double downPayment2 = vehicle2 != null ? vehicle2.getDownPayment() : 0;
+            double interestRate2 = vehicle2 != null ? vehicle2.getInterestRate() : 0;
+            double loanPeriod2 = vehicle2 != null ? vehicle2.getLoanPeriod() : 0;
+
             vehicle1 = controller.createVehicleFromInputs(mpg1Field.getText().trim(), "1", leftPanel.getSelectedVehicle());
             vehicle2 = controller.createVehicleFromInputs(mpg2Field.getText().trim(), "2", rightPanel.getSelectedVehicle());
+
+            vehicle1.setPurchasePrice(purchasePrice1);
+            vehicle1.setDownPayment(downPayment1);
+            vehicle1.setInterestRate(interestRate1);
+            vehicle1.setLoanPeriod(loanPeriod1);
+            vehicle1.setLoanAmount(purchasePrice1 - downPayment1);
+
+            vehicle2.setPurchasePrice(purchasePrice2);
+            vehicle2.setDownPayment(downPayment2);
+            vehicle2.setInterestRate(interestRate2);
+            vehicle2.setLoanPeriod(loanPeriod2);
+            vehicle2.setLoanAmount(purchasePrice2 - downPayment2);
+
+            ((FuelComparisonControllerImpl)controller).setCurrentVehicles(vehicle1, vehicle2);
+
             resultView.showSuccess("");
             updateResults();
         } catch (IllegalArgumentException e) {
             resultView.showError(e.getMessage());
         }
     }
+
 
     private void updateResults() {
         ComparisonResult result = controller.compareVehicles(vehicle1, vehicle2);
@@ -210,6 +263,22 @@ public class MainView extends BorderPane {
             double interestRate2 = (double) vehicle2Details[3];
             double loanPeriod2 = (double) vehicle2Details[4];
 
+            if (vehicle1 != null) {
+                vehicle1.setPurchasePrice(purchasePrice1);
+                vehicle1.setDownPayment(downPayment1);
+                vehicle1.setLoanAmount(loanAmount1);
+                vehicle1.setInterestRate(interestRate1);
+                vehicle1.setLoanPeriod(loanPeriod1);
+            }
+
+            if (vehicle2 != null) {
+                vehicle2.setPurchasePrice(purchasePrice2);
+                vehicle2.setDownPayment(downPayment2);
+                vehicle2.setLoanAmount(loanAmount2);
+                vehicle2.setInterestRate(interestRate2);
+                vehicle2.setLoanPeriod(loanPeriod2);
+            }
+
             controller.updateFinancialSettings(
                     purchasePrice1, downPayment1, loanAmount1, interestRate1, loanPeriod1,
                     purchasePrice2, downPayment2, loanAmount2, interestRate2, loanPeriod2
@@ -217,7 +286,7 @@ public class MainView extends BorderPane {
 
             resultView.showSuccess("Financial values updated successfully!");
 
-            if (vehicle1 != null || vehicle2 != null) {
+            if (vehicle1 != null && vehicle2 != null) {
                 updateResults();
             }
         } catch (IllegalArgumentException e) {
@@ -227,6 +296,13 @@ public class MainView extends BorderPane {
 
     private void recalculateCheck() {
         try {
+            double gasPrice = Double.parseDouble(gasPriceField.getText());
+            int miles = Integer.parseInt(milesField.getText());
+            int years = Integer.parseInt(timeField.getText());
+            double electricPrice = Double.parseDouble(electricField.getText());
+
+            calculator.updateAllParameters(gasPrice, miles, years, electricPrice);
+
             controller.updateSettingsFromStrings(
                     gasPriceField.getText(),
                     milesField.getText(),
@@ -235,6 +311,9 @@ public class MainView extends BorderPane {
             );
 
             resultView.showSuccess("Values updated successfully!");
+            if (vehicle1 != null && vehicle2 != null) {
+                updateResults();
+            }
         } catch (IllegalArgumentException e) {
             resultView.showError(e.getMessage());
         }

@@ -158,3 +158,22 @@
     -fx-max-width: 1200px;
     -fx-alignment: center;
 }
+.tooltip {
+    -fx-font-size: 12px;
+    -fx-background-color: #f8f8f8;
+    -fx-text-fill: #333;
+    -fx-padding: 8px;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-show-delay: 100ms;
+    -fx-hide-delay: 200ms;
+    -fx-wrap-text: true;
+    -fx-max-width: 300px;
+}
+.tooltip .text {
+    -fx-text-alignment: left;
+    -fx-padding: 0;
+}
