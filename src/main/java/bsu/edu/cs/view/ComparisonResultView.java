@@ -135,12 +135,12 @@ public class ComparisonResultView extends VBox {
         Label savingsLabel = new Label(String.format("$%.2f", result.annualSavings()));
         savingsLabel.getStyleClass().add("comparison-value");
         savingsLabel.setStyle("-fx-font-weight: bold;");
-        comparisonGrid.add(savingsLabel, 1, 9, 2, 1); // span across both columns
+        comparisonGrid.add(savingsLabel, 1, 9, 2, 1);
 
         Label yearSavingsLabel = new Label(String.format("$%.2f", result.yearsSavings()));
         yearSavingsLabel.getStyleClass().add("comparison-value");
         yearSavingsLabel.setStyle("-fx-font-weight: bold;");
-        comparisonGrid.add(yearSavingsLabel, 1, 10, 2, 1); // span across both columns
+        comparisonGrid.add(yearSavingsLabel, 1, 10, 2, 1);
 
         efficientVehicleLabel.setText("More Efficient Vehicle: " + result.moreEfficientVehicle());
         highlightEfficientValues();
@@ -155,7 +155,7 @@ public class ComparisonResultView extends VBox {
     }
 
     private void highlightEfficientValues() {
-        for (int row = 1; row <= 8; row++) { // Rows 1-8 are comparable metrics
+        for (int row = 1; row <= 8; row++) {
             Label label1 = findLabelInGrid(1, row);
             Label label2 = findLabelInGrid(2, row);
 

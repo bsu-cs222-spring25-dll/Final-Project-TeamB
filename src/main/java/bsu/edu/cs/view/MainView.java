@@ -102,27 +102,22 @@ public class MainView extends BorderPane {
         content.setPadding(new Insets(10));
         content.getStyleClass().add("top-section");
 
-        // Gas Price
         Label gasPriceLabel = new Label("Gas Price ($):");
         gasPriceField = new TextField(String.valueOf(3.50));
         gasPriceField.setMaxWidth(120);
 
-        // Annual Miles
         Label milesLabel = new Label("Annual Miles:");
         milesField = new TextField(String.valueOf(15000));
         milesField.setMaxWidth(120);
 
-        // Ownership Years
         Label timeLabel = new Label("Ownership Years:");
         timeField = new TextField(String.valueOf(5));
         timeField.setMaxWidth(120);
 
-        // Electricity Price
         Label electricityLabel = new Label("Electricity ($/kwh):");
         electricField = new TextField(String.valueOf(0.13));
         electricField.setMaxWidth(120);
 
-        // Recalculate Button
         Button recalculateButton = new Button("Update Calculations");
         recalculateButton.setOnAction(_ -> recalculateCheck());
 
@@ -155,19 +150,30 @@ public class MainView extends BorderPane {
         mpg1Field = new TextField();
         mpg1Field.setPromptText("Enter MPG");
         mpg1Field.setPrefWidth(100);
+        mpg1Field.setOnAction(_ -> compareVehicles());
+        mpg1Field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                compareVehicles();
+            }
+        });
 
         Label vehicle2Label = new Label("Vehicle 2 MPG:");
         mpg2Field = new TextField();
         mpg2Field.setPromptText("Enter MPG");
         mpg2Field.setPrefWidth(100);
+        mpg2Field.setOnAction(_ -> compareVehicles());
+        mpg2Field.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                compareVehicles();
+
+            }
+        });
 
         panel.add(vehicle1Label, 0, 1);
         panel.add(mpg1Field, 1, 1);
         panel.add(vehicle2Label, 0, 2);
         panel.add(mpg2Field, 1, 2);
-        Button calculateButton = new Button("Compare Vehicles");
-        calculateButton.setOnAction(_ -> compareVehicles());
-        panel.add(calculateButton,0,4);
+
 
         return panel;
     }
@@ -176,7 +182,7 @@ public class MainView extends BorderPane {
         try {
             vehicle1 = controller.createVehicleFromInputs(mpg1Field.getText().trim(), "1", leftPanel.getSelectedVehicle());
             vehicle2 = controller.createVehicleFromInputs(mpg2Field.getText().trim(), "2", rightPanel.getSelectedVehicle());
-            resultView.showSuccess("Comparing Vehicles:");
+            resultView.showSuccess("");
             updateResults();
         } catch (IllegalArgumentException e) {
             resultView.showError(e.getMessage());
@@ -190,7 +196,6 @@ public class MainView extends BorderPane {
 
     private void recalculateFinancials() {
         try {
-            // Get financial details for Vehicle 1
             Object[] vehicle1Details = financialSettingsPane.getVehicleFinancialDetails(1);
             double purchasePrice1 = (double) vehicle1Details[0];
             double downPayment1 = (double) vehicle1Details[1];
@@ -198,7 +203,6 @@ public class MainView extends BorderPane {
             double interestRate1 = (double) vehicle1Details[3];
             double loanPeriod1 = (double) vehicle1Details[4];
 
-            // Get financial details for Vehicle 2
             Object[] vehicle2Details = financialSettingsPane.getVehicleFinancialDetails(2);
             double purchasePrice2 = (double) vehicle2Details[0];
             double downPayment2 = (double) vehicle2Details[1];
@@ -206,7 +210,6 @@ public class MainView extends BorderPane {
             double interestRate2 = (double) vehicle2Details[3];
             double loanPeriod2 = (double) vehicle2Details[4];
 
-            // Update controller with financial settings for both vehicles
             controller.updateFinancialSettings(
                     purchasePrice1, downPayment1, loanAmount1, interestRate1, loanPeriod1,
                     purchasePrice2, downPayment2, loanAmount2, interestRate2, loanPeriod2
@@ -214,7 +217,6 @@ public class MainView extends BorderPane {
 
             resultView.showSuccess("Financial values updated successfully!");
 
-//             Update the results if vehicles are selected
             if (vehicle1 != null || vehicle2 != null) {
                 updateResults();
             }

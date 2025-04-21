@@ -98,28 +98,21 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
             double purchasePrice1, double downPayment1, double loanAmount1, double interestRate1, double loanPeriod1,
             double purchasePrice2, double downPayment2, double loanAmount2, double interestRate2, double loanPeriod2) {
 
-        // Update vehicle 1 financial settings
         if (currentVehicle1 != null) {
             updateVehicleFinancials(currentVehicle1, purchasePrice1, downPayment1, loanAmount1, interestRate1, loanPeriod1);
         }
 
-        // Update vehicle 2 financial settings
         if (currentVehicle2 != null) {
             updateVehicleFinancials(currentVehicle2, purchasePrice2, downPayment2, loanAmount2, interestRate2, loanPeriod2);
         }
 
-        // Recalculate comparison results if both vehicles are available
         if (currentVehicle1 != null && currentVehicle2 != null) {
             compareVehicles(currentVehicle1, currentVehicle2);
         }
     }
 
-    /**
-     * Helper method to update financial settings for a vehicle
-     */
     private void updateVehicleFinancials(Vehicle vehicle, double purchasePrice, double downPayment,
                                          double loanAmount, double interestRate, double loanPeriod) {
-        // Assuming Vehicle class has these setter methods
         vehicle.setPurchasePrice(purchasePrice);
         vehicle.setDownPayment(downPayment);
         vehicle.setLoanAmount(loanAmount);

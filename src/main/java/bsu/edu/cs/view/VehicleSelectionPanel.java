@@ -14,7 +14,7 @@ public class VehicleSelectionPanel extends VBox {
     private final ComboBox<String> modelCombo;
     private final ComboBox<String> trimCombo;
     private final TextArea resultArea;
-    private final Button selectButton;
+    //private final Button selectButton;
     private final FuelComparisonController controller;
     private Vehicle selectedVehicle;
 
@@ -44,12 +44,13 @@ public class VehicleSelectionPanel extends VBox {
 
         trimCombo = createComboBox("Trim:", 3, dropdownPane);
         trimCombo.setDisable(true);
+        trimCombo.setOnAction( _ -> searchVehicle());
 
-        selectButton = new Button("Select Vehicle");
-        selectButton.setDisable(true);
-        selectButton.setOnAction(_ -> searchVehicle());
-
-        dropdownPane.add(selectButton, 0, 4, 2, 1);
+        trimCombo.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue) {
+                        searchVehicle();
+                    }
+                });
 
         resultArea = new TextArea();
         resultArea.setEditable(false);
@@ -84,7 +85,6 @@ public class VehicleSelectionPanel extends VBox {
                     modelCombo.setDisable(true);
                     trimCombo.getItems().clear();
                     trimCombo.setDisable(true);
-                    selectButton.setDisable(true);
                     resultArea.clear();
                 }))
                 .exceptionally(this::handleError);
@@ -102,7 +102,6 @@ public class VehicleSelectionPanel extends VBox {
                     modelCombo.setDisable(false);
                     trimCombo.getItems().clear();
                     trimCombo.setDisable(true);
-                    selectButton.setDisable(true);
                     resultArea.clear();
                 }))
                 .exceptionally(this::handleError);
@@ -115,7 +114,6 @@ public class VehicleSelectionPanel extends VBox {
         if (selectedYear == null || selectedMake == null || selectedModel == null) return;
 
         trimCombo.setDisable(true);
-        selectButton.setDisable(true);
         resultArea.clear();
 
         controller.getTrims(selectedYear, selectedMake, selectedModel)
@@ -129,7 +127,6 @@ public class VehicleSelectionPanel extends VBox {
                     }
                     trimCombo.setDisable(false);
                     trimCombo.getSelectionModel().selectFirst();
-                    selectButton.setDisable(false);
                 }))
                 .exceptionally(this::handleError);
     }
@@ -141,7 +138,6 @@ public class VehicleSelectionPanel extends VBox {
         String selectedTrim = trimCombo.getValue();
 
         trimCombo.setDisable(true);
-        selectButton.setDisable(true);
 
         controller.searchVehicle(selectedYear, selectedMake, selectedModel, selectedTrim)
                 .thenAcceptAsync(vehicle -> Platform.runLater(() -> {
@@ -150,7 +146,6 @@ public class VehicleSelectionPanel extends VBox {
                         displayVehicleDetails(vehicle);
                     }
                     trimCombo.setDisable(false);
-                    selectButton.setDisable(false);
                 }))
                 .exceptionally(this::handleError);
     }
