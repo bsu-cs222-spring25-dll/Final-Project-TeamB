@@ -15,8 +15,6 @@ public class MainView extends BorderPane {
     private final FuelComparisonController controller;
     private Vehicle vehicle1;
     private Vehicle vehicle2;
-    //private TextField mpg1Field;
-    //private TextField mpg2Field;
     private TextField gasPriceField;
     private TextField milesField;
     private TextField timeField;
@@ -38,8 +36,6 @@ public class MainView extends BorderPane {
         leftPanel = new VehicleSelectionPanel("Vehicle 1", controller, this::onVehicleSelected,this::compareVehiclesFromPanelInput);
         rightPanel = new VehicleSelectionPanel("Vehicle 2", controller, this::onVehicleSelected,this::compareVehiclesFromPanelInput);
         resultView = new ComparisonResultView(calculator);
-
-        //GridPane directMpgPanel = createDirectMpgPanel();
 
         VBox centerContent = new VBox(20);
         centerContent.setPadding(new Insets(20));
@@ -138,50 +134,6 @@ public class MainView extends BorderPane {
         return fuelPricesPane;
     }
 
-
-//    private GridPane createDirectMpgPanel() {
-//        GridPane panel = new GridPane();
-//        panel.setHgap(10);
-//        panel.setVgap(10);
-//        panel.setPadding(new Insets(10));
-//        panel.getStyleClass().add("mpg-input-panel");
-//
-//        Label directInputLabel = new Label("Or directly compare MPG values: (Year will default to 2023)");
-//        directInputLabel.setStyle("-fx-font-weight: bold;");
-//
-//        panel.add(directInputLabel, 0, 0, 2, 1);
-//
-//        Label vehicle1Label = new Label("Vehicle 1 MPG:");
-//        mpg1Field = new TextField();
-//        mpg1Field.setPromptText("Enter MPG");
-//        mpg1Field.setPrefWidth(100);
-//        mpg1Field.setOnAction(_ -> compareVehicles());
-//        mpg1Field.focusedProperty().addListener((_, _, newValue) -> {
-//            if (!newValue) {
-//                compareVehicles();
-//            }
-//        });
-//
-//        Label vehicle2Label = new Label("Vehicle 2 MPG:");
-//        mpg2Field = new TextField();
-//        mpg2Field.setPromptText("Enter MPG");
-//        mpg2Field.setPrefWidth(100);
-//        mpg2Field.setOnAction(_ -> compareVehicles());
-//        mpg2Field.focusedProperty().addListener((_, _, newValue) -> {
-//            if (!newValue) {
-//                compareVehicles();
-//
-//            }
-//        });
-//
-//        panel.add(vehicle1Label, 0, 1);
-//        panel.add(mpg1Field, 1, 1);
-//        panel.add(vehicle2Label, 0, 2);
-//        panel.add(mpg2Field, 1, 2);
-//
-//
-//        return panel;
-//    }
     private void onVehicleSelected() {
         if (leftPanel.getSelectedVehicle() != null && rightPanel.getSelectedVehicle() != null) {
             vehicle1 = leftPanel.getSelectedVehicle();

@@ -128,29 +128,32 @@ public class ComparisonResultView extends VBox {
         paramsLabel.getStyleClass().add("parameters-label");
         comparisonGrid.add(paramsLabel, 0, 11, 3, 1);
 
-        addValueCell(1, 1, String.format("$%.2f", result.perMileCost1()), result);
-        addValueCell(1, 2, String.format("$%.2f", result.perMileCost2()), result);
+        ComparisonResult.CostBreakdown cost1 = result.cost1();
+        ComparisonResult.CostBreakdown cost2 = result.cost2();
 
-        addValueCell(2, 1, String.format("$%.2f", result.dayCost1()), result);
-        addValueCell(2, 2, String.format("$%.2f", result.dayCost2()), result);
+        addValueCell(1, 1, String.format("$%.2f", cost1.perMile()), result);
+        addValueCell(1, 2, String.format("$%.2f", cost2.perMile()), result);
 
-        addValueCell(3, 1, String.format("$%.2f", result.weekCost1()), result);
-        addValueCell(3, 2, String.format("$%.2f", result.weekCost2()), result);
+        addValueCell(2, 1, String.format("$%.2f", cost1.daily()), result);
+        addValueCell(2, 2, String.format("$%.2f", cost2.daily()), result);
 
-        addValueCell(4, 1, String.format("$%.2f", result.monthCost1()), result);
-        addValueCell(4, 2, String.format("$%.2f", result.monthCost2()), result);
+        addValueCell(3, 1, String.format("$%.2f", cost1.weekly()), result);
+        addValueCell(3, 2, String.format("$%.2f", cost2.weekly()), result);
 
-        addValueCell(5, 1, String.format("$%.2f", result.annualCost1()), result);
-        addValueCell(5, 2, String.format("$%.2f", result.annualCost2()), result);
+        addValueCell(4, 1, String.format("$%.2f", cost1.monthly()), result);
+        addValueCell(4, 2, String.format("$%.2f", cost2.monthly()), result);
 
-        addValueCell(6, 1, String.format("$%.2f", result.yearCost1()), result);
-        addValueCell(6, 2, String.format("$%.2f", result.yearCost2()), result);
+        addValueCell(5, 1, String.format("$%.2f", cost1.annual()), result);
+        addValueCell(5, 2, String.format("$%.2f", cost2.annual()), result);
 
-        addValueCell(7, 1, String.format("$%.2f", result.maintenanceCost1()), result);
-        addValueCell(7, 2, String.format("$%.2f", result.maintenanceCost2()), result);
+        addValueCell(6, 1, String.format("$%.2f", cost1.annual() * ownershipYears), result);
+        addValueCell(6, 2, String.format("$%.2f", cost2.annual() * ownershipYears), result);
 
-        addValueCell(8, 1, String.format("$%.2f", result.totalCost1()), result);
-        addValueCell(8, 2, String.format("$%.2f", result.totalCost2()), result);
+        addValueCell(7, 1, String.format("$%.2f", cost1.maintenance()), result);
+        addValueCell(7, 2, String.format("$%.2f", cost2.maintenance()), result);
+
+        addValueCell(8, 1, String.format("$%.2f", cost1.total()), result);
+        addValueCell(8, 2, String.format("$%.2f", cost2.total()), result);
 
         Label savingsLabel = new Label(String.format("$%.2f", result.annualSavings()));
         savingsLabel.getStyleClass().add("comparison-value");
@@ -178,42 +181,33 @@ public class ComparisonResultView extends VBox {
         tooltip.setShowDuration(Duration.INDEFINITE);
 
         try {
-            double val1 = 0, val2 = 0;
-            val2 = switch (row) {
-                case 1 -> {
-                    val1 = result.perMileCost1();
-                    yield result.perMileCost2();
-                }
-                case 2 -> {
-                    val1 = result.dayCost1();
-                    yield result.dayCost2();
-                }
-                case 3 -> {
-                    val1 = result.weekCost1();
-                    yield result.weekCost2();
-                }
-                case 4 -> {
-                    val1 = result.monthCost1();
-                    yield result.monthCost2();
-                }
-                case 5 -> {
-                    val1 = result.annualCost1();
-                    yield result.annualCost2();
-                }
-                case 6 -> {
-                    val1 = result.yearCost1();
-                    yield result.yearCost2();
-                }
-                case 7 -> {
-                    val1 = result.maintenanceCost1();
-                    yield result.maintenanceCost2();
-                }
-                case 8 -> {
-                    val1 = result.totalCost1();
-                    yield result.totalCost2();
-                }
-                default -> val2;
+            ComparisonResult.CostBreakdown cost1 = result.cost1();
+            ComparisonResult.CostBreakdown cost2 = result.cost2();
+
+            double val1 = switch (row) {
+                case 1 -> cost1.perMile();
+                case 2 -> cost1.daily();
+                case 3 -> cost1.weekly();
+                case 4 -> cost1.monthly();
+                case 5 -> cost1.annual();
+                case 6 -> cost1.annual() * calculator.getYearsOwned();
+                case 7 -> cost1.maintenance();
+                case 8 -> cost1.total();
+                default -> 0;
             };
+
+            double val2 = switch (row) {
+                case 1 -> cost2.perMile();
+                case 2 -> cost2.daily();
+                case 3 -> cost2.weekly();
+                case 4 -> cost2.monthly();
+                case 5 -> cost2.annual();
+                case 6 -> cost2.annual() * calculator.getYearsOwned();
+                case 7 -> cost2.maintenance();
+                case 8 -> cost2.total();
+                default -> 0;
+            };
+
             tooltip.setText(getTooltipText(row, val1, val2, result));
         } catch (Exception e) {
             tooltip.setText(value);
@@ -231,6 +225,8 @@ public class ComparisonResultView extends VBox {
 
         Vehicle vehicle1 = result.vehicle1();
         Vehicle vehicle2 = result.vehicle2();
+        ComparisonResult.CostBreakdown cost1 = result.cost1();
+        ComparisonResult.CostBreakdown cost2 = result.cost2();
 
         return switch (row) {
             case 1 -> String.format("""
@@ -252,8 +248,8 @@ public class ComparisonResultView extends VBox {
                             Vehicle 1: ($%.2f annual / 365 days) = $%.2f/day
                             
                             Vehicle 2: ($%.2f annual / 365 days) = $%.2f/day""",
-                    result.annualCost1(), value1,
-                    result.annualCost2(), value2);
+                    cost1.annual(), value1,
+                    cost2.annual(), value2);
 
             case 3 -> String.format("""
                             Weekly Fuel Cost Calculation:
@@ -261,8 +257,8 @@ public class ComparisonResultView extends VBox {
                             Vehicle 1: ($%.2f daily * 7 days) = $%.2f/week
                             
                             Vehicle 2: ($%.2f daily * 7 days) = $%.2f/week""",
-                    result.dayCost1(), value1,
-                    result.dayCost2(), value2);
+                    cost1.daily(), value1,
+                    cost2.daily(), value2);
 
             case 4 -> String.format("""
                             Monthly Fuel Cost Calculation:
@@ -270,8 +266,8 @@ public class ComparisonResultView extends VBox {
                             Vehicle 1: ($%.2f annual / 12 months) = $%.2f/month
                             
                             Vehicle 2: ($%.2f annual / 12 months) = $%.2f/month""",
-                    result.annualCost1(), value1,
-                    result.annualCost2(), value2);
+                    cost1.annual(), value1,
+                    cost2.annual(), value2);
 
             case 5 -> String.format("""
                             Annual Fuel Cost Calculation:
@@ -288,26 +284,44 @@ public class ComparisonResultView extends VBox {
                             Vehicle 1: $%.2f annual * %d years = $%.2f
                             
                             Vehicle 2: $%.2f annual * %d years = $%.2f""",
-                    result.annualCost1(), ownershipYears, value1,
-                    result.annualCost2(), ownershipYears, value2);
+                    cost1.annual(), ownershipYears, value1,
+                    cost2.annual(), ownershipYears, value2);
 
             case 7 -> {
-                double ageFactor1 = 1.0 + ((currentYear - vehicle1.getYear()) * 0.08);
-                double ageFactor2 = 1.0 + ((currentYear - vehicle2.getYear()) * 0.08);
+                ComparisonResult.MaintenanceCalculation compare1 = ComparisonResult.calculateMaintenanceDetails(vehicle1, annualMiles);
+                ComparisonResult.MaintenanceCalculation compare2 = ComparisonResult.calculateMaintenanceDetails(vehicle2, annualMiles);
+
                 yield String.format("""
-                            Annual Maintenance Cost:
-                            
-                            Vehicle 1:
-                            Base ($%.2f) + Mileage ($%.2f) + Age Factor(%.2f) = $%.2f
-                            
-                            Vehicle 2:
-                            Base ($%.2f) + Mileage ($%.2f) + Age Factor(%.2f) = $%.2f""",
-                    calculator.calculateYearlyMaintenance(vehicle1, annualMiles) -
-                            (0.03 * annualMiles), ageFactor1,
-                    (0.03 * annualMiles), value1,
-                    calculator.calculateYearlyMaintenance(vehicle2, annualMiles) -
-                            (0.03 * annualMiles), ageFactor2,
-                    (0.03 * annualMiles), value2);
+                    Annual Maintenance Cost Breakdown:
+                    
+                    Vehicle 1: %s
+                    - Base Cost: $%.2f
+                    - Mileage Cost: $%.2f (%.3f * %d miles)
+                    - Vehicle Age: %d years
+                    - Age Factor: %.2fx
+                    --------------------------
+                    TOTAL: ($%.2f + $%.2f) * %.2f = $%.2f
+                    
+                    Vehicle 2: %s
+                    - Base Cost: $%.2f
+                    - Mileage Cost: $%.2f (%.3f * %d miles)
+                    - Vehicle Age: %d years
+                    - Age Factor: %.2fx
+                    --------------------------
+                    TOTAL: ($%.2f + $%.2f) * %.2f = $%.2f""",
+                        vehicle1,
+                        compare1.baseCost(),
+                        compare1.mileageCost(), compare1.mileageFactor(), annualMiles,
+                        compare1.age(),
+                        compare1.ageFactor(),
+                        compare2.baseCost(), compare1.mileageCost(), compare1.ageFactor(), value1,
+
+                        vehicle2,
+                        compare2.baseCost(),
+                        compare2.mileageCost(), compare2.mileageFactor(), annualMiles,
+                        compare2.age(),
+                        compare2.ageFactor(),
+                        compare2.baseCost(), compare1.mileageCost(), compare2.ageFactor(), value2);
             }
 
             case 8 -> {
@@ -349,8 +363,8 @@ public class ComparisonResultView extends VBox {
                         vehicle1.getInterestRate(),
                         vehicle1.getLoanPeriod(),
                         vehicle1.calculateTotalInterest(),
-                        result.yearCost1(),
-                        result.maintenanceCost1() * ownershipYears,
+                        cost1.annual(),
+                        cost1.maintenance() * ownershipYears,
                         costs1.baseCost,
                         costs1.mileageCost,
                         ageFactor1,
@@ -362,8 +376,8 @@ public class ComparisonResultView extends VBox {
                         vehicle2.getInterestRate(),
                         vehicle2.getLoanPeriod(),
                         vehicle2.calculateTotalInterest(),
-                        result.yearCost2(),
-                        result.maintenanceCost2() * ownershipYears,
+                        cost2.annual(),
+                        cost2.maintenance() * ownershipYears,
                         costs2.baseCost,
                         costs2.mileageCost,
                         ageFactor2,
@@ -416,14 +430,17 @@ public class ComparisonResultView extends VBox {
         String vehicle1Name = result.vehicle1().getMake() + " " + result.vehicle1().getModel();
         String vehicle2Name = result.vehicle2().getMake() + " " + result.vehicle2().getModel();
 
+        ComparisonResult.CostBreakdown cost1 = result.cost1();
+        ComparisonResult.CostBreakdown cost2 = result.cost2();
+
         XYChart.Data<String, Number> data1 = new XYChart.Data<>(
-                vehicle1Name + " $" + String.format("%.2f", result.annualCost1()),
-                result.annualCost1());
+                vehicle1Name + " $" + String.format("%.2f", cost1.annual()),
+                cost1.annual());
         series.getData().add(data1);
 
         XYChart.Data<String, Number> data2 = new XYChart.Data<>(
-                vehicle2Name + " $" + String.format("%.2f", result.annualCost2()),
-                result.annualCost2());
+                vehicle2Name + " $" + String.format("%.2f", cost2.annual()),
+                cost2.annual());
         series.getData().add(data2);
 
         costChart.getData().add(series);

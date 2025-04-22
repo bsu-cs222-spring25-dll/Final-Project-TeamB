@@ -55,4 +55,47 @@ public class FuelCalculatorTest {
         Vehicle efficientVehicle = new Vehicle("Honda", "Insight", 52.0, 2023);
         assertEquals("Honda Insight", calculator.getMoreEfficientVehicle(gasVehicle, efficientVehicle));
     }
+    @Test
+    public void calculateMonthlyFuelCostReturnsCorrectValue() {
+        double annualCost = calculator.calculateAnnualFuelCost(gasVehicle);
+        assertEquals(annualCost / 12, calculator.calculateMonthlyFuelCost(gasVehicle), 0.01);
+    }
+
+    @Test
+    public void calculateWeeklyFuelCostReturnsCorrectValue() {
+        double dailyCost = calculator.calculateAnnualFuelCost(gasVehicle) / 365;
+        assertEquals(dailyCost * 7, calculator.calculateWeeklyFuelCost(gasVehicle), 0.01);
+    }
+
+    @Test
+    public void calculateDailyFuelCostReturnsCorrectValue() {
+        double annualCost = calculator.calculateAnnualFuelCost(gasVehicle);
+        assertEquals(annualCost / 365, calculator.calculateDailyFuelCost(gasVehicle), 0.01);
+    }
+
+    @Test
+    public void calculateCostPerMileReturnsCorrectValue() {
+        double annualCost = calculator.calculateAnnualFuelCost(gasVehicle);
+        assertEquals(annualCost / 15000, calculator.calculateCostPerMile(gasVehicle), 0.001);
+    }
+
+    @Test
+    public void calculateYearlyMaintenanceForElectricVehicle() {
+        double maintenance = calculator.calculateYearlyMaintenance(electricVehicle, 15000);
+        assertTrue(maintenance > 0);
+    }
+
+    @Test
+    public void calculateYearlyMaintenanceForEfficientGasVehicle() {
+        Vehicle efficientGas = new Vehicle("Toyota", "Prius", 50.0, 2023);
+        double maintenance = calculator.calculateYearlyMaintenance(efficientGas, 15000);
+        assertTrue(maintenance > 0);
+    }
+
+    @Test
+    public void calculateYearlyMaintenanceForStandardGasVehicle() {
+        Vehicle standardGas = new Vehicle("Ford", "F-150", 18.0, 2023);
+        double maintenance = calculator.calculateYearlyMaintenance(standardGas, 15000);
+        assertTrue(maintenance > 0);
+    }
 }

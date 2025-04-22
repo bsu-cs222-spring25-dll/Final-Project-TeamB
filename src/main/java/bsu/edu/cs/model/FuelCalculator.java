@@ -59,45 +59,36 @@ public class FuelCalculator {
 
 
     public ComparisonResult compareVehicles(Vehicle vehicle1, Vehicle vehicle2) {
-        double annualCost1 = calculateAnnualFuelCost(vehicle1);
-        double annualCost2 = calculateAnnualFuelCost(vehicle2);
-        double yearCost1 = calculateYearsOwnedFuelCost(vehicle1);
-        double yearCost2 = calculateYearsOwnedFuelCost(vehicle2);
-        double monthCost1 = calculateMonthlyFuelCost(vehicle1);
-        double monthCost2 = calculateMonthlyFuelCost(vehicle2);
-        double weekCost1 = calculateWeeklyFuelCost(vehicle1);
-        double weekCost2 = calculateWeeklyFuelCost(vehicle2);
-        double dayCost1 = calculateDailyFuelCost(vehicle1);
-        double dayCost2 = calculateDailyFuelCost(vehicle2);
-        double perMileCost1 = calculateCostPerMile(vehicle1);
-        double perMileCost2 = calculateCostPerMile(vehicle2);
+        ComparisonResult.CostBreakdown cost1 = calculateCostBreakdown(vehicle1);
+        ComparisonResult.CostBreakdown cost2 = calculateCostBreakdown(vehicle2);
+
         double annualSavings = calculateOneYearSavings(vehicle1, vehicle2);
         double yearsSavings = calculateYearSavings(vehicle1, vehicle2);
         String moreEfficient = getMoreEfficientVehicle(vehicle1, vehicle2);
-        double maintenanceCost1 = calculateYearlyMaintenance(vehicle1, annualMiles);
-        double maintenanceCost2 = calculateYearlyMaintenance(vehicle2, annualMiles);
-        double totalCost1= vehicle1.calculateTotalCostOfOwnership(annualMiles,yearsOwned,annualGasPrice,electricityPricePerKWH);
-        double totalCost2= vehicle2.calculateTotalCostOfOwnership(annualMiles,yearsOwned,annualGasPrice,electricityPricePerKWH);
-        return new ComparisonResult(vehicle1, vehicle2,
-                annualCost1, annualCost2,
-                yearCost1, yearCost2,
+        return new ComparisonResult(
+                vehicle1,
+                vehicle2,
+                cost1,
+                cost2,
                 annualSavings,
                 yearsOwned,
                 yearsSavings,
-                moreEfficient,
-                monthCost1,
-                monthCost2,
-                weekCost1,
-                weekCost2,
-                dayCost1,
-                dayCost2,
-                perMileCost1,
-                perMileCost2,
-                maintenanceCost1,
-                maintenanceCost2,
-                totalCost1,
-                totalCost2);
+                moreEfficient
+        );
     }
+
+    private ComparisonResult.CostBreakdown calculateCostBreakdown(Vehicle vehicle) {
+        double annual = calculateAnnualFuelCost(vehicle);
+        double monthly = calculateMonthlyFuelCost(vehicle);
+        double weekly = calculateWeeklyFuelCost(vehicle);
+        double daily = calculateDailyFuelCost(vehicle);
+        double perMile = calculateCostPerMile(vehicle);
+        double maintenance = calculateYearlyMaintenance(vehicle, annualMiles);
+        double total = vehicle.calculateTotalCostOfOwnership(annualMiles, yearsOwned, annualGasPrice, electricityPricePerKWH);
+
+        return new ComparisonResult.CostBreakdown(annual, monthly, weekly, daily, perMile, maintenance, total);
+    }
+
     public double calculateAnnualFuelCost(Vehicle vehicle){
         if (vehicle.getFuelType() != null){
             double kwhPerMile = kwhPerGallonEquivalent/vehicle.getCombinedMpg();

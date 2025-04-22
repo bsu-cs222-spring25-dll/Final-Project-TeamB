@@ -42,44 +42,46 @@ public class FinancialSettingPane extends TitledPane {
         Label title2 = new Label("Vehicle 2");
 
         Label purchaseLabel1 = new Label("Purchase Price ($):");
-        purchasePriceField1 = new TextField(String.valueOf(10000));
-        purchasePriceField1.setPromptText("Enter purchase price");
+        purchasePriceField1 = new TextField();
+        purchasePriceField1.setPromptText(String.valueOf(10000));
 
         Label downPaymentLabel1 = new Label("Down Payment ($):");
-        downPayment1 = new TextField(String.valueOf(5000));
-        downPayment1.setPromptText("Enter down payment");
+        downPayment1 = new TextField();
+        downPayment1.setPromptText(String.valueOf(5000));
 
         Label loanLabel1 = new Label("Loan Amount ($):");
-        loanAmount1 = new TextField(String.valueOf(5000.00));
+        loanAmount1 = new TextField();
+        loanAmount1.setPromptText(String.valueOf(5000.00));
         loanAmount1.setEditable(false);
 
         Label interestLabel1 = new Label("Interest Rate (%):");
-        interestRate1 = new TextField(String.valueOf(7.5));
-        interestRate1.setPromptText("Enter interest rate");
+        interestRate1 = new TextField();
+        interestRate1.setPromptText(String.valueOf(7.5));
 
         Label loanPeriodLabel1 = new Label("Loan Period (months):");
-        loanPeriod1 = new TextField(String.valueOf(60));
-        loanPeriod1.setPromptText("Enter loan period");
+        loanPeriod1 = new TextField();
+        loanPeriod1.setPromptText(String.valueOf(60));
 
         Label purchaseLabel2 = new Label("Purchase Price ($):");
-        purchasePriceField2 = new TextField(String.valueOf(10000));
-        purchasePriceField2.setPromptText("Enter purchase price");
+        purchasePriceField2 = new TextField();
+        purchasePriceField2.setPromptText(String.valueOf(10000));
 
         Label downPaymentLabel2 = new Label("Down Payment ($):");
-        downPayment2 = new TextField(String.valueOf(5000));
-        downPayment2.setPromptText("Enter down payment");
+        downPayment2 = new TextField();
+        downPayment2.setPromptText(String.valueOf(5000));
 
         Label loanLabel2 = new Label("Loan Amount ($):");
         loanAmount2 = new TextField();
+        loanAmount2.setPromptText(String.valueOf(5000.00));
         loanAmount2.setEditable(false);
 
         Label interestLabel2 = new Label("Interest Rate (%):");
-        interestRate2 = new TextField(String.valueOf(7.5));
-        interestRate2.setPromptText("Enter interest rate");
+        interestRate2 = new TextField();
+        interestRate2.setPromptText(String.valueOf(7.5));
 
         Label loanPeriodLabel2 = new Label("Loan Period (months):");
-        loanPeriod2 = new TextField(String.valueOf(60));
-        loanPeriod2.setPromptText("Enter loan period");
+        loanPeriod2 = new TextField();
+        loanPeriod2.setPromptText(String.valueOf(60));
 
         recalculateButton = new Button("Recalculate Financials");
         recalculateButton.getStyleClass().add("financial-recalculate-button");
