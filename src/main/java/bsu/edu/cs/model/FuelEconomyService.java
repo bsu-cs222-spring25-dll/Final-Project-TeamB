@@ -1,6 +1,7 @@
 package bsu.edu.cs.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,6 +34,7 @@ public class FuelEconomyService {
                     }
                 }
             }
+            Collections.sort(makes);
             return makes;
         });
     }
@@ -50,6 +52,7 @@ public class FuelEconomyService {
                     models.add(vehicle.getModel());
                 }
             }
+            Collections.sort(models);
             return models;
         });
     }
@@ -71,6 +74,7 @@ public class FuelEconomyService {
                     trims.add(vehicle.getTrim());
                 }
             }
+            Collections.sort(trims);
             return trims;
         });
     }
