@@ -93,7 +93,6 @@ public class FuelComparisonControllerImpl implements FuelComparisonController {
         if (mpgStr != null && !mpgStr.isEmpty()) {
             return createVehicleFromMpg(Double.parseDouble(mpgStr), name);
         } else if (selectedVehicle != null) {
-            System.out.println(selectedVehicle);
             return selectedVehicle;
         }
         throw new IllegalArgumentException("No valid vehicle input provided.");

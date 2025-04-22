@@ -107,7 +107,7 @@ public class FinancialSettingPane extends TitledPane {
     }
 
     private void setupAutoCalculation(TextField purchaseField, TextField downPaymentField, TextField loanField) {
-        ChangeListener<String> calculateLoanAmount = (ObservableValue<? extends String> observable, String oldValue, String newValue) -> updateLoanAmount(purchaseField, downPaymentField, loanField);
+        ChangeListener<String> calculateLoanAmount = (ObservableValue<? extends String> _, String _, String _) -> updateLoanAmount(purchaseField, downPaymentField, loanField);
 
         purchaseField.textProperty().addListener(calculateLoanAmount);
         downPaymentField.textProperty().addListener(calculateLoanAmount);

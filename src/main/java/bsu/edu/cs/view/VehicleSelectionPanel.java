@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class VehicleSelectionPanel extends VBox {
@@ -17,18 +19,57 @@ public class VehicleSelectionPanel extends VBox {
     private final FuelComparisonController controller;
     private Vehicle selectedVehicle;
     private final Runnable onVehicleSelected;
+    private final TextField mpgField;
+    private final GridPane dropdownPane;
 
-    public VehicleSelectionPanel(String title, FuelComparisonController controller, Runnable onVehicleSelected) {
+    public VehicleSelectionPanel(String title, FuelComparisonController controller, Runnable onVehicleSelected, Runnable onMpgEntered) {
         super(10);
         this.controller = controller;
         this.onVehicleSelected = onVehicleSelected;
         this.setPadding(new Insets(15));
         this.getStyleClass().add("vehicle-panel");
 
+        HBox titleBar = new HBox(10);
+
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("panel-title");
 
-        GridPane dropdownPane = new GridPane();
+        Label mpgLabel = new Label("Mpg:");
+        mpgField = new TextField();
+        mpgField.setPromptText("Mpg");
+        mpgField.setMaxWidth(70);
+
+        resultArea = new TextArea();
+
+        mpgField.textProperty().addListener((_, _, newValue) -> {
+            boolean hasMpg = !newValue.trim().isEmpty();
+            toggleDatabaseSectionVisibility(!hasMpg);
+
+            if (hasMpg) {
+                try {
+                    Vehicle temp = controller.createVehicleFromInputs(newValue.trim(), "temp", null);
+                    displayVehicleDetails(temp);
+                    selectedVehicle = temp;
+
+                    if (onMpgEntered != null) {
+                        onMpgEntered.run();
+                    }
+                } catch (IllegalArgumentException e) {
+                    resultArea.clear();
+                }
+            }
+        });
+
+        mpgField.setOnAction(_ -> {
+            if (!mpgField.getText().trim().isEmpty() && onMpgEntered != null) {
+                onMpgEntered.run();
+            }
+        });
+
+        titleBar.getChildren().addAll(titleLabel, mpgLabel, mpgField);
+        HBox.setHgrow(titleLabel, Priority.ALWAYS);
+
+        dropdownPane = new GridPane();
         dropdownPane.setHgap(10);
         dropdownPane.setVgap(10);
 
@@ -47,13 +88,12 @@ public class VehicleSelectionPanel extends VBox {
         trimCombo.setDisable(true);
         trimCombo.setOnAction( _ -> searchVehicle());
 
-        trimCombo.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        trimCombo.focusedProperty().addListener((_, _, newValue) -> {
                     if (!newValue) {
                         searchVehicle();
                     }
                 });
 
-        resultArea = new TextArea();
         resultArea.setEditable(false);
         resultArea.setPrefWidth(150);
         resultArea.setWrapText(true);
@@ -61,7 +101,17 @@ public class VehicleSelectionPanel extends VBox {
 
         populateYears();
 
-        this.getChildren().addAll(titleLabel, dropdownPane);
+        this.getChildren().addAll(titleBar, dropdownPane);
+    }
+
+    private void toggleDatabaseSectionVisibility(boolean visible) {
+        dropdownPane.setVisible(visible);
+        dropdownPane.setManaged(visible);
+
+        if (visible && mpgField.getText().trim().isEmpty()){
+            resultArea.clear();
+            selectedVehicle = null;
+        }
     }
 
     private void populateYears() {
@@ -145,6 +195,10 @@ public class VehicleSelectionPanel extends VBox {
                     if (vehicle != null) {
                         selectedVehicle = vehicle;
                         displayVehicleDetails(vehicle);
+
+
+                        mpgField.clear();
+
                         if (onVehicleSelected != null) {
                             onVehicleSelected.run();
                         }
@@ -207,5 +261,9 @@ public class VehicleSelectionPanel extends VBox {
 
     public Vehicle getSelectedVehicle() {
         return selectedVehicle;
+    }
+
+    public String getMpgValue() {
+        return mpgField.getText().trim();
     }
 }

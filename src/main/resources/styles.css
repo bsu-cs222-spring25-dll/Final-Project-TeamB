@@ -45,7 +45,6 @@
 }
 
 .text-field, .combo-box {
-    -fx-padding: 8px 12px;
     -fx-background-radius: 4px;
     -fx-border-radius: 4px;
     -fx-border-color: #bdc3c7;

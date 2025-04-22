@@ -15,8 +15,8 @@ public class MainView extends BorderPane {
     private final FuelComparisonController controller;
     private Vehicle vehicle1;
     private Vehicle vehicle2;
-    private TextField mpg1Field;
-    private TextField mpg2Field;
+    //private TextField mpg1Field;
+    //private TextField mpg2Field;
     private TextField gasPriceField;
     private TextField milesField;
     private TextField timeField;
@@ -35,10 +35,11 @@ public class MainView extends BorderPane {
 
         VBox header = createInstructionHeader();
         Accordion vehicleHabits = createVehicleHabits();
-        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller, this::onVehicleSelected);
-        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller, this::onVehicleSelected);
+        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller, this::onVehicleSelected,this::compareVehiclesFromPanelInput);
+        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller, this::onVehicleSelected,this::compareVehiclesFromPanelInput);
         resultView = new ComparisonResultView(calculator);
-        GridPane directMpgPanel = createDirectMpgPanel();
+
+        //GridPane directMpgPanel = createDirectMpgPanel();
 
         VBox centerContent = new VBox(20);
         centerContent.setPadding(new Insets(20));
@@ -48,7 +49,7 @@ public class MainView extends BorderPane {
         vehicleSelection.setPadding(new Insets(10));
         vehicleSelection.getChildren().addAll(leftPanel, rightPanel);
 
-        centerContent.getChildren().addAll(vehicleSelection, directMpgPanel, vehicleHabits);
+        centerContent.getChildren().addAll(vehicleSelection, vehicleHabits);
 
         VBox resultSection = new VBox(40);
         resultSection.setPadding(new Insets(20));
@@ -138,49 +139,49 @@ public class MainView extends BorderPane {
     }
 
 
-    private GridPane createDirectMpgPanel() {
-        GridPane panel = new GridPane();
-        panel.setHgap(10);
-        panel.setVgap(10);
-        panel.setPadding(new Insets(10));
-        panel.getStyleClass().add("mpg-input-panel");
-
-        Label directInputLabel = new Label("Or directly compare MPG values: (Year will default to 2023)");
-        directInputLabel.setStyle("-fx-font-weight: bold;");
-
-        panel.add(directInputLabel, 0, 0, 2, 1);
-
-        Label vehicle1Label = new Label("Vehicle 1 MPG:");
-        mpg1Field = new TextField();
-        mpg1Field.setPromptText("Enter MPG");
-        mpg1Field.setPrefWidth(100);
-        mpg1Field.setOnAction(_ -> compareVehicles());
-        mpg1Field.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                compareVehicles();
-            }
-        });
-
-        Label vehicle2Label = new Label("Vehicle 2 MPG:");
-        mpg2Field = new TextField();
-        mpg2Field.setPromptText("Enter MPG");
-        mpg2Field.setPrefWidth(100);
-        mpg2Field.setOnAction(_ -> compareVehicles());
-        mpg2Field.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                compareVehicles();
-
-            }
-        });
-
-        panel.add(vehicle1Label, 0, 1);
-        panel.add(mpg1Field, 1, 1);
-        panel.add(vehicle2Label, 0, 2);
-        panel.add(mpg2Field, 1, 2);
-
-
-        return panel;
-    }
+//    private GridPane createDirectMpgPanel() {
+//        GridPane panel = new GridPane();
+//        panel.setHgap(10);
+//        panel.setVgap(10);
+//        panel.setPadding(new Insets(10));
+//        panel.getStyleClass().add("mpg-input-panel");
+//
+//        Label directInputLabel = new Label("Or directly compare MPG values: (Year will default to 2023)");
+//        directInputLabel.setStyle("-fx-font-weight: bold;");
+//
+//        panel.add(directInputLabel, 0, 0, 2, 1);
+//
+//        Label vehicle1Label = new Label("Vehicle 1 MPG:");
+//        mpg1Field = new TextField();
+//        mpg1Field.setPromptText("Enter MPG");
+//        mpg1Field.setPrefWidth(100);
+//        mpg1Field.setOnAction(_ -> compareVehicles());
+//        mpg1Field.focusedProperty().addListener((_, _, newValue) -> {
+//            if (!newValue) {
+//                compareVehicles();
+//            }
+//        });
+//
+//        Label vehicle2Label = new Label("Vehicle 2 MPG:");
+//        mpg2Field = new TextField();
+//        mpg2Field.setPromptText("Enter MPG");
+//        mpg2Field.setPrefWidth(100);
+//        mpg2Field.setOnAction(_ -> compareVehicles());
+//        mpg2Field.focusedProperty().addListener((_, _, newValue) -> {
+//            if (!newValue) {
+//                compareVehicles();
+//
+//            }
+//        });
+//
+//        panel.add(vehicle1Label, 0, 1);
+//        panel.add(mpg1Field, 1, 1);
+//        panel.add(vehicle2Label, 0, 2);
+//        panel.add(mpg2Field, 1, 2);
+//
+//
+//        return panel;
+//    }
     private void onVehicleSelected() {
         if (leftPanel.getSelectedVehicle() != null && rightPanel.getSelectedVehicle() != null) {
             vehicle1 = leftPanel.getSelectedVehicle();
@@ -205,7 +206,7 @@ public class MainView extends BorderPane {
         }
     }
 
-    private void compareVehicles() {
+    public void compareVehiclesFromPanelInput() {
         try {
             double purchasePrice1 = vehicle1 != null ? vehicle1.getPurchasePrice() : 10000;
             double downPayment1 = vehicle1 != null ? vehicle1.getDownPayment() : 0;
@@ -217,8 +218,8 @@ public class MainView extends BorderPane {
             double interestRate2 = vehicle2 != null ? vehicle2.getInterestRate() : 0;
             double loanPeriod2 = vehicle2 != null ? vehicle2.getLoanPeriod() : 0;
 
-            vehicle1 = controller.createVehicleFromInputs(mpg1Field.getText().trim(), "1", leftPanel.getSelectedVehicle());
-            vehicle2 = controller.createVehicleFromInputs(mpg2Field.getText().trim(), "2", rightPanel.getSelectedVehicle());
+            vehicle1 = controller.createVehicleFromInputs(leftPanel.getMpgValue(), "1", leftPanel.getSelectedVehicle());
+            vehicle2 = controller.createVehicleFromInputs(rightPanel.getMpgValue(), "2", rightPanel.getSelectedVehicle());
 
             vehicle1.setPurchasePrice(purchasePrice1);
             vehicle1.setDownPayment(downPayment1);
