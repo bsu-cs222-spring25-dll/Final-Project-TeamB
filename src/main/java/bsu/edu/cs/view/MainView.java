@@ -27,14 +27,16 @@ public class MainView extends BorderPane {
 
     public MainView(FuelComparisonController controller) {
         this.controller = controller;
-        this.financialSettingsPane = new FinancialSettingPane();
+        this.financialSettingsPane = new FinancialSettingPane(new FuelCalculator());
         this.calculator = new FuelCalculator();
         financialSettingsPane.getRecalculateButton().setOnAction(_ -> recalculateFinancials());
 
         VBox header = createInstructionHeader();
         Accordion vehicleHabits = createVehicleHabits();
-        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller, this::onVehicleSelected,this::compareVehiclesFromPanelInput);
-        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller, this::onVehicleSelected,this::compareVehiclesFromPanelInput);
+        leftPanel = new VehicleSelectionPanel("Vehicle 1", controller,
+                this::onVehicleSelected, this::compareVehiclesFromPanelInput, calculator);
+        rightPanel = new VehicleSelectionPanel("Vehicle 2", controller,
+                this::onVehicleSelected, this::compareVehiclesFromPanelInput, calculator);
         resultView = new ComparisonResultView(calculator);
 
         VBox centerContent = new VBox(20);
@@ -160,12 +162,12 @@ public class MainView extends BorderPane {
 
     public void compareVehiclesFromPanelInput() {
         try {
-            double purchasePrice1 = vehicle1 != null ? vehicle1.getPurchasePrice() : 10000;
+            double purchasePrice1 = vehicle1 != null ? vehicle1.getPurchasePrice() : 0;
             double downPayment1 = vehicle1 != null ? vehicle1.getDownPayment() : 0;
             double interestRate1 = vehicle1 != null ? vehicle1.getInterestRate() : 0;
             double loanPeriod1 = vehicle1 != null ? vehicle1.getLoanPeriod() : 0;
 
-            double purchasePrice2 = vehicle2 != null ? vehicle2.getPurchasePrice() : 10000;
+            double purchasePrice2 = vehicle2 != null ? vehicle2.getPurchasePrice() : 0;
             double downPayment2 = vehicle2 != null ? vehicle2.getDownPayment() : 0;
             double interestRate2 = vehicle2 != null ? vehicle2.getInterestRate() : 0;
             double loanPeriod2 = vehicle2 != null ? vehicle2.getLoanPeriod() : 0;

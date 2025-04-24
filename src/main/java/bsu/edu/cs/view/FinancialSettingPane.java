@@ -1,5 +1,6 @@
 package bsu.edu.cs.view;
 
+import bsu.edu.cs.model.FuelCalculator;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -7,7 +8,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class FinancialSettingPane extends TitledPane {
     private final TextField purchasePriceField1;
@@ -24,7 +24,7 @@ public class FinancialSettingPane extends TitledPane {
 
     private final Button recalculateButton;
 
-    public FinancialSettingPane() {
+    public FinancialSettingPane(FuelCalculator calculator) {
         this.setText("Purchase and Loan Details");
         this.setExpanded(false);
 
@@ -86,8 +86,8 @@ public class FinancialSettingPane extends TitledPane {
         recalculateButton = new Button("Recalculate Financials");
         recalculateButton.getStyleClass().add("financial-recalculate-button");
 
-        setupAutoCalculation(purchasePriceField1, downPayment1, loanAmount1);
-        setupAutoCalculation(purchasePriceField2, downPayment2, loanAmount2);
+        setupAutoCalculation(purchasePriceField1, downPayment1, loanAmount1, calculator);
+        setupAutoCalculation(purchasePriceField2, downPayment2, loanAmount2, calculator);
 
         vehicleOne.getChildren().addAll(title1,
                 purchaseLabel1, purchasePriceField1,
@@ -108,27 +108,13 @@ public class FinancialSettingPane extends TitledPane {
         this.setContent(content);
     }
 
-    private void setupAutoCalculation(TextField purchaseField, TextField downPaymentField, TextField loanField) {
-        ChangeListener<String> calculateLoanAmount = (ObservableValue<? extends String> _, String _, String _) -> updateLoanAmount(purchaseField, downPaymentField, loanField);
+    private void setupAutoCalculation(TextField purchaseField, TextField downPaymentField,
+                                      TextField loanField, FuelCalculator calculator) {
+        ChangeListener<String> calculateLoanAmount = (_, _, _) ->
+                calculator.updateLoanAmount(purchaseField, downPaymentField, loanField);
 
         purchaseField.textProperty().addListener(calculateLoanAmount);
         downPaymentField.textProperty().addListener(calculateLoanAmount);
-    }
-
-    private void updateLoanAmount(TextField purchaseField, TextField downPaymentField, TextField loanField) {
-        try {
-            double purchasePrice = parseDouble(purchaseField.getText());
-            double downPayment = parseDouble(downPaymentField.getText());
-            double loanAmount = purchasePrice - downPayment;
-
-            if (loanAmount < 0) {
-                loanAmount = 0;
-            }
-
-            loanField.setText(String.format("%.2f", loanAmount));
-        } catch (NumberFormatException e) {
-            loanField.setText("");
-        }
     }
 
     private double parseDouble(String value) {

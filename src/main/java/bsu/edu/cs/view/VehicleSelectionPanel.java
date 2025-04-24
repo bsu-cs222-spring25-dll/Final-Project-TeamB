@@ -1,6 +1,7 @@
 package bsu.edu.cs.view;
 
 import bsu.edu.cs.controller.FuelComparisonController;
+import bsu.edu.cs.model.FuelCalculator;
 import bsu.edu.cs.model.Vehicle;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -21,11 +22,13 @@ public class VehicleSelectionPanel extends VBox {
     private final Runnable onVehicleSelected;
     private final TextField mpgField;
     private final GridPane dropdownPane;
+    private final FuelCalculator calculator;
 
-    public VehicleSelectionPanel(String title, FuelComparisonController controller, Runnable onVehicleSelected, Runnable onMpgEntered) {
+    public VehicleSelectionPanel(String title, FuelComparisonController controller, Runnable onVehicleSelected, Runnable onMpgEntered, FuelCalculator calculator) {
         super(10);
         this.controller = controller;
         this.onVehicleSelected = onVehicleSelected;
+        this.calculator = calculator;
         this.setPadding(new Insets(15));
         this.getStyleClass().add("vehicle-panel");
 
@@ -218,34 +221,7 @@ public class VehicleSelectionPanel extends VBox {
     }
 
     private void displayVehicleDetails(Vehicle vehicle) {
-        String details;
-        if (vehicle.getFuelType() != null && vehicle.getFuelType().equals("Electricity")) {
-            details = String.format(
-                    """
-                            Type: %s
-                            City: %.1f MPGe
-                            Hwy: %.1f MPGe
-                            Comb: %.1f MPGe
-                            kWh/100mi: %.1f""",
-                    vehicle.getFuelType(),
-                    vehicle.getCityMpg(),
-                    vehicle.getHighwayMpg(),
-                    vehicle.getCombinedMpg(),
-                    vehicle.getCombinedMpge()
-            );
-        } else {
-            details = String.format(
-                    """
-                            Type: Gasoline
-                            City: %.1f MPG
-                            Hwy: %.1f MPG
-                            Comb: %.1f MPG""",
-                    vehicle.getCityMpg(),
-                    vehicle.getHighwayMpg(),
-                    vehicle.getCombinedMpg()
-            );
-        }
-        resultArea.setText(details);
+        calculator.displayVehicleDetails(vehicle, resultArea);
     }
 
     private Void handleError(Throwable throwable) {

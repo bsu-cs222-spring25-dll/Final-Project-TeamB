@@ -2,7 +2,6 @@ package bsu.edu.cs.view;
 
 import bsu.edu.cs.model.ComparisonResult;
 import bsu.edu.cs.model.FuelCalculator;
-import bsu.edu.cs.model.Vehicle;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
@@ -15,7 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,215 +178,9 @@ public class ComparisonResultView extends VBox {
         tooltip.setHideDelay(Duration.millis(200));
         tooltip.setShowDuration(Duration.INDEFINITE);
 
-        try {
-            ComparisonResult.CostBreakdown cost1 = result.cost1();
-            ComparisonResult.CostBreakdown cost2 = result.cost2();
-
-            double val1 = switch (row) {
-                case 1 -> cost1.perMile();
-                case 2 -> cost1.daily();
-                case 3 -> cost1.weekly();
-                case 4 -> cost1.monthly();
-                case 5 -> cost1.annual();
-                case 6 -> cost1.annual() * calculator.getYearsOwned();
-                case 7 -> cost1.maintenance();
-                case 8 -> cost1.total();
-                default -> 0;
-            };
-
-            double val2 = switch (row) {
-                case 1 -> cost2.perMile();
-                case 2 -> cost2.daily();
-                case 3 -> cost2.weekly();
-                case 4 -> cost2.monthly();
-                case 5 -> cost2.annual();
-                case 6 -> cost2.annual() * calculator.getYearsOwned();
-                case 7 -> cost2.maintenance();
-                case 8 -> cost2.total();
-                default -> 0;
-            };
-
-            tooltip.setText(getTooltipText(row, val1, val2, result));
-        } catch (Exception e) {
-            tooltip.setText(value);
-        }
-
+        tooltip.setText(calculator.getTooltipText(row, result));
         Tooltip.install(valueLabel, tooltip);
         comparisonGrid.add(valueLabel, column, row);
-    }
-
-    private String getTooltipText(int row, double value1, double value2, ComparisonResult result) {
-        double fuelPrice = calculator.getAnnualGasPrice();
-        int annualMiles = calculator.getAnnualMiles();
-        int ownershipYears = calculator.getYearsOwned();
-        int currentYear = Year.now().getValue();
-
-        Vehicle vehicle1 = result.vehicle1();
-        Vehicle vehicle2 = result.vehicle2();
-        ComparisonResult.CostBreakdown cost1 = result.cost1();
-        ComparisonResult.CostBreakdown cost2 = result.cost2();
-
-        return switch (row) {
-            case 1 -> String.format("""
-                            Fuel Cost per Mile Calculation:
-                            
-                            Vehicle 1: %s
-                            $%.2f / %.1f MPG = $%.4f/mile
-                            
-                            Vehicle 2: %s
-                            $%.2f / %.1f MPG = $%.4f/mile""",
-                    vehicle1,
-                    fuelPrice, vehicle1.getCombinedMpg(), value1,
-                    vehicle2,
-                    fuelPrice, vehicle2.getCombinedMpg(), value2);
-
-            case 2 -> String.format("""
-                            Daily Fuel Cost Calculation:
-                            
-                            Vehicle 1: ($%.2f annual / 365 days) = $%.2f/day
-                            
-                            Vehicle 2: ($%.2f annual / 365 days) = $%.2f/day""",
-                    cost1.annual(), value1,
-                    cost2.annual(), value2);
-
-            case 3 -> String.format("""
-                            Weekly Fuel Cost Calculation:
-                            
-                            Vehicle 1: ($%.2f daily * 7 days) = $%.2f/week
-                            
-                            Vehicle 2: ($%.2f daily * 7 days) = $%.2f/week""",
-                    cost1.daily(), value1,
-                    cost2.daily(), value2);
-
-            case 4 -> String.format("""
-                            Monthly Fuel Cost Calculation:
-                            
-                            Vehicle 1: ($%.2f annual / 12 months) = $%.2f/month
-                            
-                            Vehicle 2: ($%.2f annual / 12 months) = $%.2f/month""",
-                    cost1.annual(), value1,
-                    cost2.annual(), value2);
-
-            case 5 -> String.format("""
-                            Annual Fuel Cost Calculation:
-                            
-                            Vehicle 1: %d miles / %.1f MPG * $%.2f/gal = $%.2f
-                            
-                            Vehicle 2: %d miles / %.1f MPG * $%.2f/gal = $%.2f""",
-                    annualMiles, vehicle1.getCombinedMpg(), fuelPrice, value1,
-                    annualMiles, vehicle2.getCombinedMpg(), fuelPrice, value2);
-
-            case 6 -> String.format("""
-                            Ownership Period Fuel Cost:
-                            
-                            Vehicle 1: $%.2f annual * %d years = $%.2f
-                            
-                            Vehicle 2: $%.2f annual * %d years = $%.2f""",
-                    cost1.annual(), ownershipYears, value1,
-                    cost2.annual(), ownershipYears, value2);
-
-            case 7 -> {
-                ComparisonResult.MaintenanceCalculation compare1 = ComparisonResult.calculateMaintenanceDetails(vehicle1, annualMiles);
-                ComparisonResult.MaintenanceCalculation compare2 = ComparisonResult.calculateMaintenanceDetails(vehicle2, annualMiles);
-
-                yield String.format("""
-                    Annual Maintenance Cost Breakdown:
-                    
-                    Vehicle 1: %s
-                    - Base Cost: $%.2f
-                    - Mileage Cost: $%.2f (%.3f * %d miles)
-                    - Vehicle Age: %d years
-                    - Age Factor: %.2fx
-                    --------------------------
-                    TOTAL: ($%.2f + $%.2f) * %.2f = $%.2f
-                    
-                    Vehicle 2: %s
-                    - Base Cost: $%.2f
-                    - Mileage Cost: $%.2f (%.3f * %d miles)
-                    - Vehicle Age: %d years
-                    - Age Factor: %.2fx
-                    --------------------------
-                    TOTAL: ($%.2f + $%.2f) * %.2f = $%.2f""",
-                        vehicle1,
-                        compare1.baseCost(),
-                        compare1.mileageCost(), compare1.mileageFactor(), annualMiles,
-                        compare1.age(),
-                        compare1.ageFactor(),
-                        compare2.baseCost(), compare1.mileageCost(), compare1.ageFactor(), value1,
-
-                        vehicle2,
-                        compare2.baseCost(),
-                        compare2.mileageCost(), compare2.mileageFactor(), annualMiles,
-                        compare2.age(),
-                        compare2.ageFactor(),
-                        compare2.baseCost(), compare1.mileageCost(), compare2.ageFactor(), value2);
-            }
-
-            case 8 -> {
-                double ageFactor1 = 1.0 + ((currentYear - vehicle1.getYear()) * 0.08);
-                double ageFactor2 = 1.0 + ((currentYear - vehicle2.getYear()) * 0.08);
-
-                MaintenanceCosts costs1 = getMaintenanceCosts(vehicle1);
-                MaintenanceCosts costs2 = getMaintenanceCosts(vehicle2);
-
-                yield String.format("""
-                                Total Ownership Cost (%d years):
-                                
-                                Vehicle 1: %s
-                                - Purchase: $%.2f
-                                - Down Payment: $%.2f
-                                - Loan: $%.2f @ %.2f%% for %.0f months
-                                - Total Interest: $%.2f
-                                - Fuel: $%.2f
-                                - Maintenance: $%.2f
-                                  (Base: $%.2f/yr, Mileage: $%.2f/yr, Age Factor: %.2fx)
-                                --------------------------
-                                TOTAL: $%.2f
-                                
-                                Vehicle 2: %s
-                                - Purchase: $%.2f
-                                - Down Payment: $%.2f
-                                - Loan: $%.2f @ %.2f%% for %.0f months
-                                - Total Interest: $%.2f
-                                - Fuel: $%.2f
-                                - Maintenance: $%.2f
-                                  (Base: $%.2f/yr, Mileage: $%.2f/yr, Age Factor: %.2fx)
-                                --------------------------
-                                TOTAL: $%.2f""",
-                        ownershipYears,
-                        vehicle1,
-                        vehicle1.getPurchasePrice(),
-                        vehicle1.getDownPayment(),
-                        vehicle1.getLoanAmount(),
-                        vehicle1.getInterestRate(),
-                        vehicle1.getLoanPeriod(),
-                        vehicle1.calculateTotalInterest(),
-                        cost1.annual(),
-                        cost1.maintenance() * ownershipYears,
-                        costs1.baseCost,
-                        costs1.mileageCost,
-                        ageFactor1,
-                        value1,
-                        vehicle2,
-                        vehicle2.getPurchasePrice(),
-                        vehicle2.getDownPayment(),
-                        vehicle2.getLoanAmount(),
-                        vehicle2.getInterestRate(),
-                        vehicle2.getLoanPeriod(),
-                        vehicle2.calculateTotalInterest(),
-                        cost2.annual(),
-                        cost2.maintenance() * ownershipYears,
-                        costs2.baseCost,
-                        costs2.mileageCost,
-                        ageFactor2,
-                        value2);
-            }
-
-            default -> String.format("""
-                            Vehicle 1: $%.2f
-                            Vehicle 2: $%.2f""",
-                    value1, value2);
-        };
     }
 
     private void highlightEfficientValues() {
@@ -492,29 +284,5 @@ public class ComparisonResultView extends VBox {
         vehicle1HeaderLabel.setText("Vehicle 1");
         vehicle2HeaderLabel.setText("Vehicle 2");
         efficientVehicleLabel.setText("");
-    }
-
-    private record MaintenanceCosts(double baseCost, double mileageCost) {
-    }
-
-    private MaintenanceCosts getMaintenanceCosts(Vehicle vehicle) {
-        double baseCost;
-        double mileageFactor;
-
-        if (vehicle.getFuelType() != null && vehicle.getFuelType().equals("Electricity")) {
-            baseCost = 400;
-            mileageFactor = 0.03;
-        } else if (vehicle.getCombinedMpg() > 30) {
-            baseCost = 550;
-            mileageFactor = 0.045;
-        } else {
-            baseCost = 650;
-            mileageFactor = 0.055;
-        }
-
-        return new MaintenanceCosts(
-                baseCost,
-                mileageFactor * calculator.getAnnualMiles()
-        );
     }
 }
